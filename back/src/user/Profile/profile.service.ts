@@ -124,11 +124,11 @@ export class ProfileService {
                },
              },
            });
-           const Friendships = receivedPromise?.map((friendship) => friendship.sender);
-           const Friendships2 = sentPromise?.map((friendship) => friendship.receiver);
-
+           let Friendships = receivedPromise?.map((friendship) => friendship.sender);
+           Friendships?.concat(sentPromise?.map((friendship) => friendship.receiver));
+        //    const merged = Friendships2?.concat(Friendships?);
            return{
-            ...Friendships, ...Friendships2
+            ...Friendships2
             
         }
     }

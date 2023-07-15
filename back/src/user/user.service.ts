@@ -61,9 +61,18 @@ export class UserService {
         return false;
     }
     
-    async findUser(user: any) {
-        const UserExists = await this.CreateUser(user);
-        return UserExists;
+    async GetUser(user: any) {
+        const Exists = await this.prisma.user.findUnique({
+            where:{id: user.id},
+        });
+
+        if (Exists)
+            return Exists;
+        else
+        {
+            const UserExists = await this.CreateUser(user);
+            return UserExists;
+        }
     }
     updateOnlineStatus(id: string, status: boolean) {
         throw new Error('Method not implemented.');

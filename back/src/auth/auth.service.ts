@@ -45,7 +45,7 @@ export class AuthService {
 
     async signIn(res: Response, req: Request) {
         //check is a user
-        const check = await this.userService.findUser(req.user);
+        const check = await this.userService.GetUser(req.user);
         const Access_Token = this.generateToken(req.user);
         const Refresh_Token = this.generateRefreshToken(req.user);
         res.cookie('access_token', Access_Token, {httpOnly: true});
@@ -65,7 +65,7 @@ export class AuthService {
 
         console.log(req);
         const users: any = req.user;
-        const user = await this.userService.findUser(users.user);
+        const user = await this.userService.GetUser(users.user);
         if (!user)
             throw new ForbiddenException('User Does not exist');
         const decryptedToken = this.decryptToken(user.refreshToken);
