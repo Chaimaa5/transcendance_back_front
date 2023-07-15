@@ -1,0 +1,60 @@
+.first-container{
+    width: 30%;
+    height: 95%;
+    border: #1D3557 solid 2px;
+    position: absolute;
+    right: 0%;
+}
+
+.modes-{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container-mode{
+    position: relative;
+    height: 95%;
+    background: linear-gradient(120deg, #457B9D 0%, #1D3557 100%);
+    align-self: flex-end;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    align-self: center;
+    transition: width 0.9s ease;
+    box-shadow: 0.5vw 0.5vw 1.3vw  #0c182b;
+    cursor: pointer;
+}
+
+.mode-dsc{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    bottom: 1vw;
+}
+
+.mode-img{
+    position: relative;
+    bottom: 2vw;
+    height: 50%;
+}
+
+.multi-mode{
+    background: linear-gradient(180deg, #ED636D 0%, #E63946 100%);
+}
+
+.vs-mode{
+    background: linear-gradient(180deg, #A7D1EB 0%, #457B9D 100%);
+
+}
+
+.close-title{
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    text-transform: uppercase;
+    color: #F1FAEE;
+    font-family: Myfont_r;
+}

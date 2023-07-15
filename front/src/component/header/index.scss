@@ -1,0 +1,36 @@
+:root{
+    --w-svg: 1.6vw;
+    --w-logo: 3.5vw;
+}
+
+.header-{
+    display: grid;
+    grid-template-rows: 12vh;
+    grid-template-columns: 10vw 80vw 10vw;
+    grid-template-areas: "_logo search_ icon_";
+}
+
+.icon{
+    width: var(--w-svg);
+    margin: 0.5vw;
+}
+
+.logo_{
+    width: var(--w-logo);
+}
+
+.icons{
+    justify-self: center;
+    align-self: center;
+    grid-area: icon_;
+}
+
+.logo{
+    justify-self: center;
+    align-self: center;
+    grid-area: _logo;
+}
+
+.search{
+    grid-area: search_;
+}
