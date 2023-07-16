@@ -13,5 +13,6 @@ COPY passport-42.d.ts ./
 
 RUN npm install --force
 
-
-CMD  yes | npx prisma generate  && yes | npx prisma migrate dev  && npm run start:dev
+RUN yes | npx prisma generate  
+RUN yes | npx prisma migrate dev 
+CMD   npm run start:dev
