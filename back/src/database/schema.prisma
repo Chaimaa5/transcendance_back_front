@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Achievement{
-  id Int @id
+  id Int @default(autoincrement())@id
   Achievement String
   Achieved    Boolean
   userId String

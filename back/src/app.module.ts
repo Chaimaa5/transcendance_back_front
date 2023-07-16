@@ -6,10 +6,16 @@ import { JwtModule } from '@nestjs/jwt';
 // import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 // import { SocketGateway } from './socket/socket.gateway';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
-    AuthModule,
+    AuthModule, ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'upload'),
+      serveRoot: '/upload' 
+
+    })
   ],
   controllers: [],
   providers: [],

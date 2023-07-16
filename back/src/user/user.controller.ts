@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, OnApplicationShutdown, Param, Patch, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, OnApplicationShutdown, Param, Patch, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDTO } from './dto/updatedto.dto'
 import { CreateFriendshipDTO } from './dto/createFriendship.dto';
-import { Request} from 'express';
+import { Request, Response} from 'express';
 // import { SocketGateway } from 'src/socket/socket.gateway';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '@prisma/client';
@@ -34,9 +34,9 @@ export class UserController{
     }
     //working
     @Delete()
-    async DeleteUser(@Req() req: Request){
+    async DeleteUser(@Req() req: Request, @Res() res: Response){
         const user : User = req.user as User;
-        return this.userservice.DeleteUser(user.id);
+        return this.userservice.DeleteUser(user.id, res);
     }
 
 

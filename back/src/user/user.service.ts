@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { UpdateUserDTO } from './dto/updatedto.dto'
 import { CreateFriendshipDTO } from './dto/createFriendship.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class UserService {
@@ -60,7 +61,16 @@ export class UserService {
         }
         return false;
     }
-    
+    async FindUser(user: any) {
+        const Exists = await this.prisma.user.findUnique({
+            where:{id: user.id},
+        });
+
+        if (Exists)
+            return 1;
+        else
+            return 2;
+    }
     async GetUser(user: any) {
         const Exists = await this.prisma.user.findUnique({
             where:{id: user.id},
@@ -105,18 +115,27 @@ export class UserService {
         }})
         await this.prisma.room.deleteMany({where:{ownerId: id}})
     }
-    async DeleteUser(id: string) {
+    async DeleteUser(id: string, @Res() res: Response) {
         const prisma = new PrismaClient();
-        await prisma.friendship.deleteMany({where:  {
-            OR: [
-            {senderId: id},
-            {receiverId: id},]
-        }});
-        this.deleteGroups(id);
-        this.deleteAchievements(id);
-        this.deleteGames(id);
-        await prisma.user.delete({where: {id: id}});
+
+        if (id){
+            await prisma.friendship.deleteMany({where:  {
+                OR: [
+                {senderId: id},
+                {receiverId: id},]
+            }});
+            this.deleteGroups(id);
+            this.deleteAchievements(id);
+            this.deleteGames(id);
+            //clear cookies
+            res.clearCookie('access_token');
+            res.clearCookie('refresh_token');
+            await prisma.user.delete({where: {id: id}});
+        }
+        else
+            throw 'User not Found';
     }
+
     async deleteGames(id: string) {
         await this.prisma.game.deleteMany({
             where: {
@@ -135,7 +154,7 @@ export class UserService {
     async FindbyID(id: string) {
         const prisma = new PrismaClient();
         //Throw error if he's blocked or he blocked the other user
-        return prisma.user.findUnique({where:  {id: id},
+        const user = await prisma.user.findUnique({where:  {id: id},
             select: {
                 username: true,
                 avatar: true,
@@ -143,7 +162,19 @@ export class UserService {
                 level: true,
                 topaz: true,
             }
-        });
+        }).then((user)=>{
+            if (user){
+                if (user.avatar)
+                {
+                    if (!user.avatar.includes('cdn.intra')){
+                        user.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + user.avatar
+                    }
+                }
+            return user
+            }
+        })
+        return user;
+
     }
 
 
@@ -330,8 +361,20 @@ export class UserService {
              topaz: true,
            }
         });
+
+        const modified = players.map((player) =>{
+            if (player){
+                if (player.avatar)
+                {
+                    if (!player.avatar.includes('cdn.intra')){
+                        player.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + player.avatar
+                    }
+                }
+            }
+            return player
+        })
         // const res = players.slice(3);
-        return players;
+        return modified;
      }
     // async firstUpdate(data: Body) {
     //     return this.prisma.user.update({where: {id: id}, data: data as any});

@@ -8,7 +8,6 @@ import { UserService } from 'src/user/user.service';
 import { ConfigService } from 'src/config/config.service';
 // import { toDataURL } from 'qrcode';
 import { authenticator } from 'otplib';
-import { TFA } from './dto/TFA.dto';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +17,26 @@ export class AuthService {
         private configService: ConfigService ){}
     secretKey = 'secret';
   
+    async signIn(res: Response, req: Request) {
+        //check is a user
+        const find = this.userService.FindUser(req.user);
+        const check = await this.userService.GetUser(req.user);
+        const Access_Token = this.generateToken(req.user);
+        const Refresh_Token = this.generateRefreshToken(req.user);
+        res.cookie('access_token', Access_Token, {httpOnly: true});
+        res.cookie('refresh_token', Refresh_Token, {httpOnly: true});
+        const encryptedToken = this.encryptToken(Refresh_Token);
+        this.userService.UpdateRefreshToken(check.id, encryptedToken)
+        return find
+    }
+
+    signOut(res: Response) {
+        res.clearCookie('access_token');
+        res.clearCookie('refresh_token');
+        res.redirect('http://localhost:8000/login');
+    } 
+
+
     encryptToken(token: string) {
         const cipher = crypto.createCipher('aes-256-cbc', this.secretKey);
         let encrypted = cipher.update(JSON.stringify(token), 'utf8', 'hex');
@@ -43,24 +62,7 @@ export class AuthService {
         return this.jwtService.sign(payload, {expiresIn: '30d'});
     }
 
-    async signIn(res: Response, req: Request) {
-        //check is a user
-        const check = await this.userService.GetUser(req.user);
-        const Access_Token = this.generateToken(req.user);
-        const Refresh_Token = this.generateRefreshToken(req.user);
-        res.cookie('access_token', Access_Token, {httpOnly: true});
-        res.cookie('refresh_token', Refresh_Token, {httpOnly: true});
-        const encryptedToken = this.encryptToken(Refresh_Token);
-        this.userService.UpdateRefreshToken(check.id, encryptedToken)
-        return(res);
-    }
-
-    signOut(res: Response) {
-        res.clearCookie('access_token');
-        res.clearCookie('refresh_token');
-        res.redirect('http://localhost:8000/login');
-    } 
-
+ 
     async RefreshTokens(req: Request, res: Response) {
 
         console.log(req);

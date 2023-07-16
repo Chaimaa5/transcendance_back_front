@@ -26,6 +26,7 @@
     "@nestjs/passport": "*",
     "@nestjs/platform-express": "*",
     "@nestjs/platform-socket.io": "*",
+    "@nestjs/serve-static": "^4.0.0",
     "@nestjs/swagger": "^7.0.4",
     "@nestjs/websockets": "*",
     "@prisma/client": "*",
@@ -46,6 +47,7 @@
     "qrcode": "*",
     "reflect-metadata": "*",
     "rxjs": "*",
+    "serve-static": "^1.15.0",
     "socket.io": "*",
     "swagger-ui-express": "*"
   },

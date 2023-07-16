@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Friendship, PrismaClient } from '@prisma/client';
 
 
 @Injectable()
@@ -124,13 +124,41 @@ export class ProfileService {
                },
              },
            });
-           let Friendships = receivedPromise?.map((friendship) => friendship.sender);
-           Friendships?.concat(sentPromise?.map((friendship) => friendship.receiver));
-        //    const merged = Friendships2?.concat(Friendships?);
-           return{
-            ...Friendships2
-            
-        }
+
+           
+           const senderData = receivedPromise ?  receivedPromise.map((friendship) => friendship.sender): [];
+           const senderDataModified = senderData.map((sender) =>{
+            if (sender){
+                if (sender.avatar)
+                {
+                    if (!sender.avatar.includes('cdn.intra')){
+                        sender.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + sender.avatar
+                    }
+                }
+            }
+            return sender
+            });
+
+           const receiverData =sentPromise ? sentPromise.map((friendship) => friendship.receiver): [];
+           const receiverDataModified = receiverData.map((receiver) =>{
+            if (receiver){
+                if (receiver.avatar)
+                {
+                    if (!receiver.avatar.includes('cdn.intra')){
+                        receiver.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + receiver.avatar
+                    }
+                }
+            }
+            return receiver
+            });
+
+           const combinedData = [...senderDataModified, ...receiverDataModified];
+
+
+const valuesOnlyWithoutKeys = combinedData.map(({ username, ...rest }) => rest);
+
+return valuesOnlyWithoutKeys;
+
     }
     async MatchHistory(id: string) {
         //should add the result
