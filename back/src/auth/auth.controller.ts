@@ -59,7 +59,10 @@ export class AuthController {
         const isCodeValid = this.authservice.verifyTFA(user, authTFA.code);
 
         if(!isCodeValid)
-            throw new UnauthorizedException('invalid code');
-        await this.authservice.activateTFA(user.id);
+            return false
+        else{
+            await this.authservice.activateTFA(user.id);
+            return true
+        }
     }
 }

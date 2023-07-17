@@ -148,4 +148,32 @@ export class HomeService {
           return combinedData;
     }
 
+
+    async Search(input: string){
+        let res = await this.prisma.user.findMany({
+          where: {
+            OR: [
+              {
+                username: {
+                    startsWith: input,
+                    mode: "insensitive"}
+              },
+              {
+                fullname: {
+                    startsWith: input,
+                    mode: "insensitive"}
+              }
+            ]
+          },
+          select: {
+            id: true,
+            username: true,
+            fullname: true,
+            avatar: true,
+        }
+        }) 
+
+        res = this.userService.updateAvatar(res);
+        return res;
+    }
 }

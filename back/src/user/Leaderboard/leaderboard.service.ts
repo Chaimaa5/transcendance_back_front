@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { UserService } from '../user.service';
 
 
 @Injectable()
 export class LeaderboardService {
     prisma = new PrismaClient();
+  userService = new UserService;
     constructor(){}
     
     async Leaderboard(ownerId: string) {
@@ -35,7 +37,7 @@ export class LeaderboardService {
         });
 
 
-        return await this.prisma.user.findMany({
+        let res =  await this.prisma.user.findMany({
             take: 3,
             orderBy: {
                 XP: 'desc',
@@ -63,6 +65,9 @@ export class LeaderboardService {
                 badge: true,
             }
         });
+
+        res = this.userService.updateAvatar(res);
+        return res;
     }
     async Palyers(ownerId: string) {
 
@@ -113,7 +118,7 @@ export class LeaderboardService {
             },
         });
         
-        const players = await this.prisma.user.findMany({
+        let players = await this.prisma.user.findMany({
           orderBy: {
             XP: 'desc',
           },
@@ -138,6 +143,7 @@ export class LeaderboardService {
         },
           select: {
             id: true,
+            avatar: true,
             rank: true,
             username: true,
             level: true,
@@ -145,6 +151,7 @@ export class LeaderboardService {
             topaz: true,
           }
        });
+       players = this.userService.updateAvatar(players);
        return players;
     }
 }

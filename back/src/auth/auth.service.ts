@@ -111,7 +111,6 @@ export class AuthService {
 
 
     async verifyTFA(user: any, code: string) {
-        // check if user exist
 
         return await authenticator.verify({
             token: code,
