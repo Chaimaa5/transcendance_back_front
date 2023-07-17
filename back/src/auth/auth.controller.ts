@@ -56,13 +56,13 @@ export class AuthController {
     @UseGuards(AuthGuard('jwt'))
     async EnableTFA(@Req() req: Request, @Body(ValidationPipe) authTFA: TFA){
         const user : User = req.user as User;
-        const isCodeValid = this.authservice.verifyTFA(user, authTFA.code);
-
+        const isCodeValid  = await this.authservice.verifyTFA(user, authTFA.code);
         if(!isCodeValid)
-            return false
-        else{
+        {
             await this.authservice.activateTFA(user.id);
             return true
         }
+        else
+            return false
     }
 }

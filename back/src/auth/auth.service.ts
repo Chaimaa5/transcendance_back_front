@@ -112,10 +112,13 @@ export class AuthService {
 
     async verifyTFA(user: any, code: string) {
 
-        return await authenticator.verify({
-            token: code,
+        const check =  await authenticator.verify({
+
+            token: code, 
             secret: user.TwoFacSecret
-        });
+        }
+        );
+        return check
     }
 
     async activateTFA(id: string){
