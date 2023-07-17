@@ -12,8 +12,9 @@ export class HomeController {
 
     // 5 best ranked
     @Get('/bestRanked')
-    async bestRanked() {
-        return this.profile.bestRanked();
+    async bestRanked(@Req() req: Request) {
+        const user : User = req.user as User;
+        return this.profile.bestRanked(user.id);
     }
     
     @Get('/navbar/')

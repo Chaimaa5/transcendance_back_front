@@ -11,13 +11,15 @@ export class LeaderboardController {
     constructor(private readonly profile: LeaderboardService){}
 
     @Get('')
-    async Leaderboard() {
-        return this.profile.Leaderboard();
+    async Leaderboard( @Req() req: Request) {
+        const user : User = req.user as User;
+        return this.profile.Leaderboard(user.id);
     }
     
     @Get('players')
-    async Palyers() {
-        return this.profile.Palyers();
+    async Palyers( @Req() req: Request) {
+        const user : User = req.user as User;
+        return this.profile.Palyers(user.id);
     }
 
 }

@@ -8,12 +8,51 @@ export class HomeService {
     prisma = new PrismaClient();
     constructor(){}
     
-    async bestRanked() {
+    async bestRanked(ownerId: string) {
+        const userBlocked = await this.prisma.friendship.findMany({
+            where: {
+                AND: [
+                    {senderId: ownerId},
+                    {status: 'blocked'}
+                ]
+            },
+            select: {
+                receiverId: true
+            }
+        });
+
+
+        const userBlockers = await this.prisma.friendship.findMany({
+            where: {
+                AND: [
+                    {receiverId: ownerId},
+                    {status: 'blocked'}
+                ]
+            },
+            select: {
+                senderId: true
+            }
+        });
+
         return await this.prisma.user.findMany({
          take: 5,
          orderBy: {
              XP: 'desc',
          },
+         where:{
+            AND: [
+                {
+                    id: {
+                      notIn: userBlocked.map(friendship => friendship.receiverId)
+                    }
+                  },
+                {
+                    id: {
+                      notIn: userBlockers.map(friendship => friendship.senderId)
+                    }
+                }
+              ]
+        },
          select: {
              username: true,
              avatar: true,
