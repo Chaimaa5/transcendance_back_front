@@ -9,10 +9,18 @@ export class ProfileService {
     constructor(){}
 
 
-    async Profile(id: string) {
-        const friends = await this.CountFriends(id);
-        const user = await this.prisma.user.findUnique({where:{id : id},
+    async Profile(id: string, username: string) {
+
+        let isOwner = true;
+        let isFriend = false;
+        let isSender = false;
+        let isReceiver = false;
+        let isBlocked = false;
+        const owner = await this.prisma.user.findUnique({where:{id : id},})
+        const friends = await this.CountFriends(username);
+        const user = await this.prisma.user.findUnique({where:{username : username},
             select: {
+                id: true,
                 username: true,
                 level: true,
                 XP: true,
@@ -21,6 +29,36 @@ export class ProfileService {
                 win: true
             }
         });
+        if (user?.id != owner?.id)
+            isOwner = false;
+        if (!isOwner && user){
+            const ownerFriend =  await this.prisma.friendship.findFirst({
+                where:{
+                        OR: [
+                          { senderId: id, receiverId: user.id } ,
+                            { senderId: user.id, receiverId: id } 
+                        ]
+                },
+                select: {
+                    id: true,
+                    receiverId: true,
+                    senderId: true,
+                    status: true
+                }
+            });
+            console.log(ownerFriend)
+            if(ownerFriend?.status.includes('accepted'))
+                isFriend = true;
+            else if (ownerFriend?.status.includes('blocked'))
+                isBlocked = true;
+            else if (ownerFriend?.status.includes('pending'))
+            {
+                if (user?.id == ownerFriend.senderId)
+                    isSender = true;
+                else
+                    isReceiver = true;
+            }
+        }
         return{
             'username': user?.username,
             'losses': user?.loss,
@@ -28,15 +66,19 @@ export class ProfileService {
             'level':user?.level,
             'xp': user?.XP,
             'rank': user?.rank,
-            'friend':friends
+            'friend':friends,
+            'isOwner': isOwner,
+            'isFriend': isFriend,
+            'isSender': isSender,
+            'isReceiver': isReceiver,
+            'isBlocked': isBlocked
+
         }
     }
 
 
-    async Badges(id: string) {
-
-        //should update the badges in database
-        return await this.prisma.user.findUnique({where:{id : id},
+    async Badges(username: string) {
+        return await this.prisma.user.findUnique({where:{username : username},
             select: {
                 badge: true,
             }
@@ -44,7 +86,9 @@ export class ProfileService {
     }
 
 
-    async CountFriends(id: string){
+    async CountFriends(username: string){
+        const user  = await this.prisma.user.findUnique({where: {username: username}});
+        const id = user?.id
         const number = await this.prisma.friendship.count({
             where: {
                 status: 'accepted',
@@ -57,7 +101,9 @@ export class ProfileService {
         return number;
     }
 
-    async CalculatePercentage(id: string): Promise<{loss: number, win: number}>{
+    async CalculatePercentage(username: string): Promise<{loss: number, win: number}>{
+        const user  = await this.prisma.user.findUnique({where: {username: username}});
+        const id = user?.id
         const losses = await this.prisma.user.findUnique({
             where: {id: id},
             select: {
@@ -87,12 +133,58 @@ export class ProfileService {
     }
 
 
-    async Friends(id: string) {
+    async Friends(username: string, ownerId: string) {
+
+        const user  = await this.prisma.user.findUnique({where: {username: username}});
+        const id = user?.id
+        const userBlocked = await this.prisma.friendship.findMany({
+            where: {
+                AND: [
+                    {senderId: ownerId},
+                    {status: 'blocked'}
+                ]
+            },
+            select: {
+                receiverId: true
+            }
+        });
+
+
+        const userBlockers = await this.prisma.friendship.findMany({
+            where: {
+                AND: [
+                    {receiverId: ownerId},
+                    {status: 'blocked'}
+                ]
+            },
+            select: {
+                senderId: true
+            }
+        });
+
+
         const sentPromise = await this.prisma.user.findUnique({
              where: { id: id },
            }).sentFriendships({
              where: {
                status: 'accepted',
+               AND: [
+                {
+                  receiver: {
+                    id: {
+                      notIn: userBlocked.map(friendship => friendship.receiverId)
+                    }
+                  }
+                },
+                {
+                  receiver: {
+                    id: {
+                      notIn: userBlockers.map(friendship => friendship.senderId)
+                    }
+                  }
+                }
+              ]
+              
              },
              select: {
                receiver: {
@@ -111,6 +203,22 @@ export class ProfileService {
            }).receivedFriendships({
              where: {
                status: 'accepted',
+               AND: [
+                {
+                  receiver: {
+                    id: {
+                      notIn: userBlocked.map(friendship => friendship.receiverId)
+                    }
+                  }
+                },
+                {
+                  receiver: {
+                    id: {
+                      notIn: userBlockers.map(friendship => friendship.senderId)
+                    }
+                  }
+                }
+              ]
              },
              select: {
                sender: {
@@ -155,12 +263,14 @@ export class ProfileService {
            const combinedData = [...senderDataModified, ...receiverDataModified];
 
 
-const valuesOnlyWithoutKeys = combinedData.map(({ username, ...rest }) => rest);
-
-return valuesOnlyWithoutKeys;
+            const valuesOnlyWithoutKeys = combinedData.map(({ username, ...rest }) => rest);
+                    
+            return valuesOnlyWithoutKeys;
 
     }
-    async MatchHistory(id: string) {
+    async MatchHistory(username: string) {
+        const user  = await this.prisma.user.findUnique({where: {username: username}});
+        const id = user?.id
         //should add the result
        return await this.prisma.game.findMany({
         where: {

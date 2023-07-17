@@ -4,7 +4,6 @@ import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { setupSwagger } from './swagger';
-import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

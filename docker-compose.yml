@@ -13,18 +13,18 @@ services:
       - '5432:5432'
     networks:
       - app-network
-  backend:
-    build: 
-     context: ./back
-    restart: always
-    env_file:
-        - .env
-    volumes:
-      - ./back/src:/src
-    ports:
-      - '3000:3000'
-    networks:
-      - app-network
+  # backend:
+  #   build: 
+  #    context: ./back
+  #   restart: always
+  #   env_file:
+  #       - .env
+  #   volumes:
+  #     - ./back/src:/src
+  #   ports:
+  #     - '3000:3000'
+  #   networks:
+      # - app-network
   # frontend:
   #   build: 
   #    context: ./front
@@ -39,8 +39,8 @@ services:
 volumes:
   postgres:
    driver: local
-  backend:
-   driver: local
+  # backend:
+  #  driver: local
   # frontend:
   #  driver: local
 networks:

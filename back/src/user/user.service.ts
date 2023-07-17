@@ -32,9 +32,6 @@ export class UserService {
             return user;
         }
         else{
-            const defaultAchievements  = [
-                {id: 1, Achievement: "x", Achieved: false},
-            ];
             let rankCount = await prisma.user.count();
             if(!rankCount)
                 rankCount = 1;
@@ -52,7 +49,18 @@ export class UserService {
                     status: false,
                     rank: rankCount,
                     level: 0,
-                    badge: {create: defaultAchievements},
+                    badge: {
+                        create: [{
+                            Achievement: "x", Achieved: false,
+                        },
+                        {
+                            Achievement: "y", Achieved: false,
+                        },
+                        {
+                            Achievement: "z", Achieved: false,
+                        }
+                    ]
+                    },
                     refreshToken: '',
                     createdAt: new Date(),
                 }

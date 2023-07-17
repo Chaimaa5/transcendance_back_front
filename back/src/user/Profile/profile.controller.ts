@@ -13,38 +13,35 @@ export class ProfileController {
     //---------Profile
 
     //Profile info
-    @Get('')
-    async Profile(@Req() req: Request){
+    @Get(':username')
+    async Profile(@Param('username') username: string, @Req() req: Request){
         const user : User = req.user as User;
-        return this.profile.Profile(user.id);
+        return this.profile.Profile(user.id, username);
     }
 
     //Acheivments
-    @Get('/acheivments')
-    async GetAcheivments(@Req() req: Request){
-        const user : User = req.user as User;
-        return this.profile.Badges(user.id);
+    @Get('/acheivments/:username')
+    async GetAcheivments(@Param('username') username: string, @Req() req: Request){
+        return this.profile.Badges(username);
     }
 
     //MatchHistory --- Not Complete
-    @Get('/history')
-    async MatchHistory(@Req() req: Request){
-        const user : User = req.user as User;
-        return this.profile.MatchHistory(user.id);
+    @Get('/history/:username')
+    async MatchHistory(@Param('username') username: string,@Req() req: Request){
+        return this.profile.MatchHistory(username);
     }
 
     //Percentage in profile
-    @Get('/statistics')
-    async UserStatistics(@Req() req: Request){
-        const user : User = req.user as User;
-        return this.profile.CalculatePercentage(user.id);
+    @Get('/statistics/:username')
+    async UserStatistics(@Param('username') username: string, @Req() req: Request){
+        return this.profile.CalculatePercentage(username);
     }
 
     //List of friends in profile
-    @Get('/friends')
-    async Friends(@Req() req: Request){
+    @Get('/friends/:username')
+    async Friends(@Param('username') username: string, @Req() req: Request){
         const user : User = req.user as User;
-        return this.profile.Friends(user.id);
+        return this.profile.Friends(username, user.id);
     }
 
 }
