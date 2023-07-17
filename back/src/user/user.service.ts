@@ -6,14 +6,9 @@ import { Response } from 'express';
 
 @Injectable()
 export class UserService {
+    
     async userSetup(id: string, avatar: Express.Multer.File, data: UpdateUserDTO) {
-        // await this.prisma.user.update({where: {id: id}, data: data as any});
-        // const port = process.env.PORT;
-        // const host = process.env.HOST;
-        // const location = port + "/upload/";
-        // const filename = host + location + avatar.filename;
         const filename ="/upload/"+ avatar.filename;
-
         await this.prisma.user.update({where: {id: id}, data: {avatar: filename}});
     }
  
@@ -212,12 +207,6 @@ export class UserService {
             },
         });
 
-        // const {Id} = dto;
-        // await this.prisma.friendship.delete({
-        //     where: {
-        //         id: Id,
-        //     },
-        // });
     }
 
     async acceptFriend(id : string, dto :CreateFriendshipDTO){
@@ -234,15 +223,6 @@ export class UserService {
             },
         });
 
-        // const {Id} = dto;
-        // await this.prisma.friendship.update({
-        //     where: {
-        //        id: Id,
-        //     },
-        //     data: {
-        //         status: 'accepted',
-        //     },
-        // });
     }
 
     async blockFriend(id : string, dto :CreateFriendshipDTO){
@@ -261,17 +241,6 @@ export class UserService {
             },
         });
 
-        // const {Id} = dto;
-        // await this.prisma.friendship.update({
-        //     where: {
-        //        id: Id,
-
-        //     },
-        //     data: {
-        //         status: 'blocked',
-        //         blockerId: id,
-        //     },
-        // });
     }
 
     //should be updated
@@ -370,7 +339,12 @@ export class UserService {
            }
         });
 
-        const modified = players.map((player) =>{
+        const modified = this.updateAvatar(players);
+        return modified;
+     }
+
+    updateAvatar(Object: any[]) {
+          const ModifiedObject = Object.map((player) =>{
             if (player){
                 if (player.avatar)
                 {
@@ -381,17 +355,12 @@ export class UserService {
             }
             return player
         })
-        // const res = players.slice(3);
-        return modified;
-     }
-    // async firstUpdate(data: Body) {
-    //     return this.prisma.user.update({where: {id: id}, data: data as any});
-    // }
-
-
-    uploadImage(id: string, avatar: Express.Multer.File) {
-        
+        return ModifiedObject;
     }
+
+    // uploadImage(id: string, avatar: Express.Multer.File) {
+        
+    // }
 
 }
 

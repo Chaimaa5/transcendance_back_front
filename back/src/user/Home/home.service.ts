@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { UserService } from '../user.service';
 
 
 @Injectable()
 export class HomeService {
   
     prisma = new PrismaClient();
+    userService= new UserService;
     constructor(){}
     
     async bestRanked(ownerId: string) {
@@ -34,7 +36,7 @@ export class HomeService {
             }
         });
 
-        return await this.prisma.user.findMany({
+        const bestRanked = await this.prisma.user.findMany({
          take: 5,
          orderBy: {
              XP: 'desc',
@@ -61,6 +63,10 @@ export class HomeService {
              topaz: true,
          }
         });
+
+        const ModifiedObject = this.userService.updateAvatar(bestRanked)
+        return ModifiedObject;
+
      }
  
      async NavBar(id : string) {
@@ -80,7 +86,7 @@ export class HomeService {
 
 
     async OnlineStatus(id : string) {
-        return await this.prisma.user.findFirst({
+        return await this.prisma.user.findUnique({
             where: {id: id},
             select: {
                 username: true,
@@ -91,35 +97,55 @@ export class HomeService {
     }
     
     async OnlineFriends(id: string) {
-        // need to exclude user
-        const res = await this.prisma.friendship.findMany({
+        const sentPromise = await this.prisma.user.findUnique({
+            where: { id: id },
+          }).sentFriendships({
             where: {
-                AND: [
-                  {
-                    OR: [
-                      { senderId: id },
-                      { receiverId: id }
-                    ]
-                  },
-                  { status: 'accepted' }
-                ],
+              status: 'accepted',
             },
-            include:{
-                sender: {
-                    select:{
-                        status: true,
-                        avatar: true,
-                    },
+            select: {
+              receiver: {
+                select: {
+                    id: true,
+                    username: true,
+                    avatar: true,
+                    status: true,
+                    XP: true,
+                    level: true,
                 },
-                receiver: {
-                    select:{
-                        status: true,
-                        avatar: true
-                    }
+              },
+            },
+          });
+
+
+          const receivedPromise = await this.prisma.user.findUnique({
+            where: { id: id },
+          }).receivedFriendships({
+            where: {
+              status: 'accepted',
+            },
+            select: {
+              sender: {
+                select: {
+                  id: true,
+                  username: true,
+                  avatar: true,
+                  status:true,
+                  XP: true,
+                  level: true,
                 },
-            }
-        });
-        return res;
+              },
+            },
+          });
+
+          let receiverData =sentPromise ? sentPromise.map((friendship) => friendship.receiver): [];
+          let senderData = receivedPromise ?  receivedPromise.map((friendship) => friendship.sender): [];
+
+          receiverData = this.userService.updateAvatar(receiverData);
+          senderData = this.userService.updateAvatar(senderData);
+
+          let combinedData = [...receiverData, ...senderData];
+          return combinedData;
     }
 
 }
