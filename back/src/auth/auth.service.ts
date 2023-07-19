@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Achievement, PrismaClient, User } from '@prisma/client';
 import { JwtPayload, VerifyOptions } from 'jsonwebtoken';
@@ -8,17 +8,48 @@ import { UserService } from 'src/user/user.service';
 import { ConfigService } from 'src/config/config.service';
 // import { toDataURL } from 'qrcode';
 import { authenticator } from 'otplib';
+import { Socket } from 'socket.io';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import * as cookie from 'cookie';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
+   
+
 
    
-    constructor(private readonly jwtService: JwtService, private readonly userService: UserService,
-        private configService: ConfigService ){}
+    constructor(){}
+    jwtService = new  JwtService;
+    userService= new  UserService;
+    configService = new  ConfigService;
+    prisma = new PrismaClient();
     secretKey = 'secret';
   
+
+    async GetUserFromSocket(client: Socket) {
+        try{
+            let token  = client.handshake.headers.authorization
+            if(token)
+            {
+                const auth_token : string = token.split('')[1]
+                const payload = jwt.verify(auth_token , process.env.JWT_REFRESH_SECRET as jwt.Secret)
+                const id = payload.sub as string
+                // const user  = this.userService.FindbyID(id) as User
+                // if(!user)
+                //     throw new UnauthorizedException('User Does Not Exist');
+                // const id2 = user.id
+                // return {...user}
+            }
+        }catch(err){
+            if(err instanceof jwt.TokenExpiredError )
+                throw  new UnauthorizedException('Expired Token Exception');
+        }
+    }
+
+        
+
     async signIn(res: Response, req: Request) {
-        //check is a user
         const find = this.userService.FindUser(req.user);
         const check = await this.userService.GetUser(req.user);
         const Access_Token = this.generateToken(req.user);
@@ -99,8 +130,7 @@ export class AuthService {
         const account = "celmhan";
 
         //update secret in database
-        const prisma = new PrismaClient();
-        await prisma.user.update({
+        await this.prisma.user.update({
             where: {id: id}, 
             data: {TwoFacSecret: secret}
     });
@@ -109,25 +139,21 @@ export class AuthService {
         // return await toDataURL(authUrl);
     }
 
-
     async verifyTFA(user: any, code: string) {
+        // check if user exist
 
-        const check =  await authenticator.verify({
-
-            token: code, 
+        return await authenticator.verify({
+            token: code,
             secret: user.TwoFacSecret
-        }
-        );
-        return check
+        });
     }
 
     async activateTFA(id: string){
-        const prisma = new PrismaClient();
-        await prisma.user.update({
+        
+        await this.prisma.user.update({
             where: {id: id}, 
             data: {isTwoFacEnabled: true}
-    });
+        });
     }
-    
-}
 
+}

@@ -40,11 +40,11 @@ export class UserController{
     }
 
 
-    @Post('')
-    async UpdateUser(@Req() req: Request, @Body() data: UpdateUserDTO){
-        const user : User = req.user as User;
-        this.userservice.UpdateUser(user.id, data);
-    }
+    // @Post('')
+    // async UpdateUser(@Req() req: Request, @Body() data: UpdateUserDTO){
+    //     const user : User = req.user as User;
+    //     this.userservice.UpdateUser(user.id, data);
+    // }
 
     //working
     @Post('setup')
@@ -111,10 +111,6 @@ export class UserController{
 
 
 
-    // @Patch('online.:id')
-    // async updateOnlineStatus(@Param(':id') id : string, @Body('online') status: boolean){
-    //     const user = await this.userservice.updateOnlineStatus(id, status);
-    // }
 
     // async onApplicationShutdown(signal?: string): Promise<void>{
     //     const connectedUsers = Array.from(this.socketGateway.connectedUsers);

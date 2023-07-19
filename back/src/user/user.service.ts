@@ -6,11 +6,7 @@ import { Response } from 'express';
 
 @Injectable()
 export class UserService {
-    
-    async userSetup(id: string, avatar: Express.Multer.File, data: UpdateUserDTO) {
-        const filename ="/upload/"+ avatar.filename;
-        await this.prisma.user.update({where: {id: id}, data: {avatar: filename}});
-    }
+  
  
 
     
@@ -87,19 +83,26 @@ export class UserService {
             return UserExists;
         }
     }
-    updateOnlineStatus(id: string, status: boolean) {
-        throw new Error('Method not implemented.');
-    }
-    getUser() {
-        throw new Error('Method not implemented.');
-    }
-    bestRanked() {
-        throw new Error('Method not implemented.');
-    }
+
+    // async UpdateUser(id: string, data: UpdateUserDTO) {
+    //     await this.prisma.user.update({
+    //         where: {id: id},
+    //         data: data
+    //     })
+    // }
+    // GetById(socket: any) {
+    //    this
+    // }
     
-    UpdateUser(id: string, UserData: UpdateUserDTO) {
-        return this.prisma.user.update({where: {id: id}, data: UserData as any});
+    async userSetup(id: string, avatar: Express.Multer.File, data: UpdateUserDTO) {
+        const filename ="/upload/"+ avatar.filename;
+        await this.prisma.user.update({where: {id: id}, data: {avatar: filename}});
     }
+
+    async updateOnlineStatus(id: string, status: boolean) {
+       await this.prisma.user.update({where: {id: id}, data: {status: status}})
+    }
+
     
     async UpdateRefreshToken(id: string, Rt: string) {
         const prisma = new PrismaClient();
@@ -158,13 +161,14 @@ export class UserService {
         const prisma = new PrismaClient();
         //Throw error if he's blocked or he blocked the other user
         const user = await prisma.user.findUnique({where:  {id: id},
-            select: {
-                username: true,
-                avatar: true,
-                XP: true,
-                level: true,
-                topaz: true,
-            }
+            // select: {
+            //     id: true,
+            //     username: true,
+            //     avatar: true,
+            //     XP: true,
+            //     level: true,
+            //     topaz: true,
+            // }
         }).then((user)=>{
             if (user){
                 if (user.avatar)
@@ -194,6 +198,9 @@ export class UserService {
                 blockerId: '',
             },
         });
+
+        this.addNotifications(id, receiverId as string, 'friendship', 'sent you an invite')
+     
     }
 
     async removeFriend(id : string, dto :CreateFriendshipDTO){
@@ -222,7 +229,7 @@ export class UserService {
                 status: 'accepted',
             },
         });
-
+        this.addNotifications(id, receiverId as string, 'friendship', 'accepted your invite')
     }
 
     async blockFriend(id : string, dto :CreateFriendshipDTO){
@@ -358,10 +365,35 @@ export class UserService {
         return ModifiedObject;
     }
 
-    // uploadImage(id: string, avatar: Express.Multer.File) {
-        
-    // }
+   async GetNotifications(id : string){
+        const res = await this.prisma.notification.findMany({
+            where: {receiverId: id }
+        });
 
+        return res;
+   }
+
+   async addNotifications(senderId : string, receiverId: string, type: string, context: string){
+        const sender = await this.prisma.user.findUnique({where: {id: senderId}})
+        const receiver = await this.prisma.user.findUnique({where: {id: receiverId}})
+
+        const content = sender?.username + context + receiver?.username
+
+        await this.prisma.notification.create({
+            data: {
+                sender: {connect: {id: senderId}},
+                receiver: {connect: {id: receiverId}},
+                status: 'not seen',
+                type: type,
+                content: content
+            },
+        });
+    }
+
+    async deleteNotification(id: number)
+    {
+        await this.prisma.notification.delete({where: {id : id}})
+    }
 }
 
 
