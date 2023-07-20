@@ -1,11 +1,5 @@
 @import '../home/index.scss';
 
-h6{
-    font-family: Myfont_l;
-    font-size: 1vw;
-}
-
-
 .sign-bg{
     position: absolute;
     width: 100%;
@@ -49,13 +43,13 @@ h6{
 }
 
 .btn-dsc{
-    color: #A8DADC;
+    color: var(--lightBlue);
     margin: 2%;
 }
 
 button:hover{
     .-btn{
-        background-color:#A8DADC;
+        background-color:var(--lightBlue);
     }
     .btn-dsc{
         color: #1D3557;
@@ -64,7 +58,7 @@ button:hover{
         fill: #1D3557;
     }
     .sign-btn{
-        border: #A8DADC solid 2px;
+        border: var(--lightBlue) solid 2px;
     }
 
 }
@@ -102,7 +96,7 @@ button:hover{
 
 .title_{
     font-size: 3vw;
-    color: #A8DADC;
+    color: var(--lightBlue);
 }
 
 #spline-container{

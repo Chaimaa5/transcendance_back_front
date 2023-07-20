@@ -14,8 +14,7 @@ export class UserService {
     constructor(){}
     async CreateUser(user: any)
     {
-        const prisma = new PrismaClient();
-        const UserExists = await prisma.user.findUnique({
+        const UserExists = await this.prisma.user.findUnique({
             where:{id: user.id},
         });
         if(UserExists){
@@ -23,10 +22,10 @@ export class UserService {
             return user;
         }
         else{
-            let rankCount = await prisma.user.count();
+            let rankCount = await this.prisma.user.count();
             if(!rankCount)
                 rankCount = 1;
-              const newUser = await prisma.user.create({
+              const newUser = await this.prisma.user.create({
                 data:{
                     id: user.id,
                     username: user.username,
@@ -105,13 +104,11 @@ export class UserService {
 
     
     async UpdateRefreshToken(id: string, Rt: string) {
-        const prisma = new PrismaClient();
-        return prisma.user.update({where: {id: id}, data: {refreshToken : Rt}});
+        return this.prisma.user.update({where: {id: id}, data: {refreshToken : Rt}});
     }
     
-    GetMany() {
-        const prisma = new PrismaClient();
-        return prisma.user.findMany();
+    async GetMany() {
+        return await this.prisma.user.findMany();
     }
 
     async  deleteGroups(id: string) {
@@ -122,10 +119,9 @@ export class UserService {
         await this.prisma.room.deleteMany({where:{ownerId: id}})
     }
     async DeleteUser(id: string, @Res() res: Response) {
-        const prisma = new PrismaClient();
 
         if (id){
-            await prisma.friendship.deleteMany({where:  {
+            await this.prisma.friendship.deleteMany({where:  {
                 OR: [
                 {senderId: id},
                 {receiverId: id},]
@@ -133,10 +129,9 @@ export class UserService {
             this.deleteGroups(id);
             this.deleteAchievements(id);
             this.deleteGames(id);
-            //clear cookies
             res.clearCookie('access_token');
             res.clearCookie('refresh_token');
-            await prisma.user.delete({where: {id: id}});
+            await this.prisma.user.delete({where: {id: id}});
         }
         else
             throw 'User not Found';
@@ -158,9 +153,7 @@ export class UserService {
        })
     }
     async FindbyID(id: string) {
-        const prisma = new PrismaClient();
-        //Throw error if he's blocked or he blocked the other user
-        const user = await prisma.user.findUnique({where:  {id: id},
+        const user = await this.prisma.user.findUnique({where:  {id: id},
             // select: {
             //     id: true,
             //     username: true,

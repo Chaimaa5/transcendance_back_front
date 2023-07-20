@@ -70,10 +70,11 @@ export class HomeService {
      }
  
      async NavBar(id : string) {
-        return await this.prisma.user.findFirst({
+        const nav = await this.prisma.user.findFirst({
             where: {id: id},
             select: {
                 username: true,
+                avatar: true,
                 XP: true,
                 level: true,
                 games: true,
@@ -82,18 +83,31 @@ export class HomeService {
                 badge: true,
             }
            });
+           if (nav)
+           if (!nav.avatar.includes('cdn.intra')){
+            nav.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + nav.avatar
+        }
+
+         return nav;
     }
 
 
     async OnlineStatus(id : string) {
-        return await this.prisma.user.findUnique({
+       const user = await this.prisma.user.findUnique({
             where: {id: id},
             select: {
                 username: true,
+                avatar: true,
                 status: true,
             }
     
            });
+
+           if (user)
+           if (!user.avatar.includes('cdn.intra')){
+            user.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + user.avatar
+        }
+        return user
     }
     
     async OnlineFriends(id: string) {

@@ -1,27 +1,29 @@
-import { SubscribeMessage, WebSocketGateway, OnGatewayDisconnect, OnGatewayConnection} from '@nestjs/websockets';
-import { Socket } from 'socket.io';
-import { AuthService } from 'src/auth/auth.service';
-import { UserService } from 'src/user/user.service';
+// import { SubscribeMessage, WebSocketGateway, OnGatewayDisconnect, OnGatewayConnection} from '@nestjs/websockets';
+// import { JwtPayload } from 'jsonwebtoken';
+// import { Socket } from 'socket.io';
+// import { AuthService } from 'src/auth/auth.service';
+// import { UserService } from 'src/user/user.service';
 
-@WebSocketGateway()
-export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisconnect{
-  connectedUsers: Set<string> = new Set()
-  authService = new AuthService;
-  userService = new UserService;
+// @WebSocketGateway()
+// export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisconnect{
+//   payload: JwtPayload
+//   connectedUsers: Set<string> = new Set()
+//   authService = new AuthService;
+//   userService = new UserService;
 
-  afterInit(server: any) {
+//   afterInit(client: WebSocket) {
 
-  }
-  handleDisconnect(client: Socket){
-    const id = client.handshake.query.userId;
-    // this.userService.updateOnlineStatus(id, 0)
-    this.connectedUsers.delete(id as string);
-  }
+//     // const id  = this.webSocket.validate(client);
+//   }
+//   handleDisconnect(client: Socket){
+//     const id = client.handshake.query.userId;
+//     // this.userService.updateOnlineStatus(id, 0)
+//     this.connectedUsers.delete(id as string);
+//   }
 
-  handleConnection(client: Socket) {
+//   handleConnection(client: Socket) {
 
-    const id  = this.authService.GetUserFromSocket(client);
     
-    // this.userService.updateOnlineStatus(id, 1)
-  }
-}
+//     // this.userService.updateOnlineStatus(id, 1)
+//   }
+// }

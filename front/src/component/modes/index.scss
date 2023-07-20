@@ -1,7 +1,7 @@
 .first-container{
     width: 30%;
     height: 95%;
-    border: #1D3557 solid 2px;
+    border: var(--darkBlue) solid 2px;
     position: absolute;
     right: 0%;
 }
@@ -15,7 +15,7 @@
 .container-mode{
     position: relative;
     height: 95%;
-    background: linear-gradient(120deg, #457B9D 0%, #1D3557 100%);
+    background: linear-gradient(120deg, var(--blue) 0%, var(--darkBlue) 100%);
     align-self: flex-end;
     display: flex;
     justify-content: center;
@@ -43,11 +43,11 @@
 }
 
 .multi-mode{
-    background: linear-gradient(180deg, #ED636D 0%, #E63946 100%);
+    background: linear-gradient(180deg, #ED636D 0%, var(--red) 100%);
 }
 
 .vs-mode{
-    background: linear-gradient(180deg, #A7D1EB 0%, #457B9D 100%);
+    background: linear-gradient(180deg, #A7D1EB 0%, var(--blue) 100%);
 
 }
 
@@ -55,6 +55,6 @@
     writing-mode: vertical-rl;
     text-orientation: upright;
     text-transform: uppercase;
-    color: #F1FAEE;
+    color: var(--white);
     font-family: Myfont_r;
 }

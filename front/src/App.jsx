@@ -7,6 +7,9 @@ import Setup from './component/setup';
 import Profile from './component/profile/index';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Leaderboord from './component/leaderboord/index';
+import axios from 'axios';
+import { useEffect } from 'react';
+
 
 function App() {
   return (
@@ -14,10 +17,10 @@ function App() {
     <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path={"/Home"}  element={<Container />} />
+          <Route path={"/home"}  element={<Container />} />
           <Route path="/setup" element={<Setup />} />
-          <Route path="/Profile" element={<Container />} />
-          <Route path="/Leaderboord" element={<Container />} />
+          <Route path="/profile" element={<Container />} />
+          <Route path="leaderboord" element={<Container />} />
         </Routes>
     </Router>
     </div>

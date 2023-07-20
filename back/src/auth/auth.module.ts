@@ -7,16 +7,17 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { UserService } from 'src/user/user.service';
 import { ConfigModule } from 'src/config/config.module';
+import { RefreshStrategy } from './jwt/refresh.strategy';
 import { JWTStrategy } from './jwt/jwt.strategy';
 
 
 @Module({
   imports:  [ UserModule, PassportModule,
   JwtModule.register({
-      secret: process.env.JWT_REFRESH_SECRET,
-      signOptions: { expiresIn: '1h' },
+      secretOrPrivateKey: process.env.JWT_REFRESH_SECRET,
+      signOptions: { expiresIn: '20s' },
     }), ConfigModule],
-  providers: [FortyTwoStrategy, AuthService, JwtModule, UserService, JWTStrategy],
+  providers: [FortyTwoStrategy, AuthService, JwtModule, UserService, JWTStrategy, RefreshStrategy],
   controllers: [AuthController]
 })
 export class AuthModule {}

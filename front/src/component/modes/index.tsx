@@ -7,7 +7,6 @@ import training_img from "../tools/modes/brain.png"
 import racket_img from "../tools/modes/racket.png"
 import Challenge_img from "../tools/modes/1vs1.png"
 
-
 const Modes = () => {
 
     const [isopen, setopen] = useState(true);
@@ -67,7 +66,7 @@ const Modes = () => {
             <div  onClick={isFirstopen_} style={{width: wd, borderRadius: borderRd_f}} className="container-mode vs-mode">
                 { first_cp &&
                     <>
-                        <img className="mode-img" src={Challenge_img} alt="" />
+                        <motion.img whileHover={{scale: 1.05}} className="mode-img" src={Challenge_img} alt="" />
                         <div className="mode-dsc">
                             <h1 className="leading-[2.2vw] text-[#F1FAEE] text-[2vw]">Challenge <br/> Mode</h1>
                             <h6 className="text-center text-[#F1FAEE] text-[0.7vw]" >Invite Your Friends To a Game!</h6>
@@ -86,7 +85,7 @@ const Modes = () => {
             <div  onClick={isSecondopen_} style={{width: wd_s, borderRadius: borderRd_s}} className= "container-mode multi-mode">
                 { second_cp &&
                     <>
-                        <img className="mode-img" src={racket_img} alt="" />
+                        <motion.img whileHover={{scale: 1.05}} className="mode-img" src={racket_img} alt="" />
                         <div className="mode-dsc">
                             <h1 className="leading-[2.2vw] text-[#F1FAEE] text-[2vw]">Multiplayer <br/> Mode</h1>
                             <h6 className="text-center text-[#F1FAEE] text-[0.7vw]" >Compete in Intense Multiplayer Matches!</h6>
@@ -105,7 +104,7 @@ const Modes = () => {
             <div onClick={isclose_} style={{width: wd_f, borderRadius: borderRd_l}} className="container-mode">
                 { isopen &&
                     <>
-                        <img className="mode-img" src={training_img} alt="" />
+                        <motion.img whileHover={{scale: 1.05}} className="mode-img" src={training_img} alt="" />
                         <div className="mode-dsc">
                             <h1 className="leading-[2.2vw] text-[#F1FAEE] text-[2vw]">Training <br/>  Mode</h1>
                             <h6 className="text-center text-[#F1FAEE] text-[0.7vw]" >Master Your Skills And Train to Become a Pong Pro</h6>

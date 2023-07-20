@@ -27,25 +27,25 @@ export class AuthService {
     secretKey = 'secret';
   
 
-    async GetUserFromSocket(client: Socket) {
-        try{
-            let token  = client.handshake.headers.authorization
-            if(token)
-            {
-                const auth_token : string = token.split('')[1]
-                const payload = jwt.verify(auth_token , process.env.JWT_REFRESH_SECRET as jwt.Secret)
-                const id = payload.sub as string
-                // const user  = this.userService.FindbyID(id) as User
-                // if(!user)
-                //     throw new UnauthorizedException('User Does Not Exist');
-                // const id2 = user.id
-                // return {...user}
-            }
-        }catch(err){
-            if(err instanceof jwt.TokenExpiredError )
-                throw  new UnauthorizedException('Expired Token Exception');
-        }
-    }
+    // async GetUserFromSocket(client: Socket) {
+    //     try{
+    //         let token  = client.handshake.headers.authorization
+    //         if(token)
+    //         {
+    //             const auth_token : string = token.split('')[1]
+    //             const payload  = jwt.verify(auth_token , process.env.JWT_REFRESH_SECRET as jwt.Secret)
+    //             const id = payload.id
+    //             // const user  = this.userService.FindbyID(id) as User
+    //             // if(!user)
+    //             //     throw new UnauthorizedException('User Does Not Exist');
+    //             // const id2 = user.id
+    //             // return {...user}
+    //         }
+    //     }catch(err){
+    //         if(err instanceof jwt.TokenExpiredError )
+    //             throw  new UnauthorizedException('Expired Token Exception');
+    //     }
+    // }
 
         
 
@@ -85,12 +85,12 @@ export class AuthService {
 
     generateToken(user: any) : string {
         const payload: JwtPayload = {id: user.id,  username: user.username, isTwoFacEnabled: user.isTwoFacEnabled }; 
-        return this.jwtService.sign(payload);
+        return this.jwtService.sign(payload, {secret: process.env.JWT_REFRESH_SECRET});
     }
 
     generateRefreshToken(user: any) : string  {
         const payload: JwtPayload = {id: user.id,  username: user.username, isTwoFacEnabled: user.isTwoFacEnabled}; 
-        return this.jwtService.sign(payload, {expiresIn: '30d'});
+        return this.jwtService.sign(payload, {secret: process.env.JWT_REFRESH_SECRET, expiresIn: '30d'});
     }
 
  
@@ -98,7 +98,7 @@ export class AuthService {
 
         console.log(req);
         const users: any = req.user;
-        const user = await this.userService.GetUser(users.user);
+        const user = await this.userService.GetUser(users);
         if (!user)
             throw new ForbiddenException('User Does not exist');
         const decryptedToken = this.decryptToken(user.refreshToken);

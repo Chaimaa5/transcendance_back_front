@@ -8,9 +8,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Multer } from 'multer';
 import { Config } from './multer.middlewear';
-import * as fs from 'fs';
 
 
 @Controller('user')

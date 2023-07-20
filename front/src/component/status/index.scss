@@ -1,13 +1,15 @@
 .container-status{
     width: 40%;
     height: 97%;
-    background-color: #1D3557;
+    background-color: var(--darkBlue);
     border-radius: 2vw;
     display: flex;
     flex-direction: column;
     box-shadow: 0vw 0vw 1.4vw  #091424;
     justify-content: flex-start;
     padding-top: 5%;
+    padding-left: 3%;
+    overflow-y: scroll;
 }
 
 .status-{

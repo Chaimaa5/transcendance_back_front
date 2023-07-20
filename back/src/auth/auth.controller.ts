@@ -1,4 +1,4 @@
-import { Controller, Get,  Post, UseGuards,  Res, Req, Headers, UnauthorizedException, Body, ValidationPipe} from '@nestjs/common';
+import { Controller, Get,  Post, UseGuards,  Res, Req, Headers, Body, ValidationPipe} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
@@ -29,8 +29,9 @@ export class AuthController {
     }
 
     @Get('/refresh')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('Refresh'))
     async RefreshToken(@Req() req: Request, @Res() res: Response){
+        console.log('here')
         res.clearCookie('access_token');
         res.clearCookie('refresh_token');
         await this.authservice.RefreshTokens(req, res);

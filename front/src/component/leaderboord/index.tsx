@@ -67,7 +67,7 @@ const Leaderboord = () => {
             <div className="h-[50%] w-[100%] leader-players">
                 <div className="h-[100%] w-[100%] pr-[1%]">
                     {
-                        achve.map((key, value)=>
+                        achve.map(()=>
                         <TopPlayers/>
                         )
                     }

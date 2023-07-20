@@ -9,16 +9,10 @@
     justify-items: center;
 }
 
-
-h4{
-    font-size: Myfont_m;
-    font-size: 0.7vw;
-}
-
 .value{
     font-size: Myfont_l;
     font-size: 0.6vw;
-    color: #A8DADC;
+    color: var(--lightBlue);
 }
 
 .level-bar{
@@ -42,14 +36,14 @@ h4{
 .icon-svg{
     width: 1.6vw;
     margin: 0;
-    fill: #A8DADC;
+    fill: var(--lightBlue);
 }
 
 .lv{
     height: 70%;
     width: 30%;
     overflow: hidden;
-    background-color: #A8DADC;
+    background-color: var(--lightBlue);
     display: flex;
     border-radius: 5vw;
     align-items: flex-end;
@@ -57,14 +51,14 @@ h4{
 
 .lv-status{
     width: 100%;
-    background: linear-gradient(360deg, #E63946 0%, #EF616B 100%);
+    background: linear-gradient(360deg, var(--red) 0%, #EF616B 100%);
     border-radius: 2vw;
 }
 
 .info{
     display: flex;
     flex-direction: column;
-    color: #A8DADC;
+    color: var(--lightBlue);
     align-items: center;
 }
 
@@ -79,7 +73,7 @@ h4{
 }
 
 .icon-svg:hover{
-    fill: #E63946;
+    fill: var(--red);
 }
 
 .profil_{
@@ -96,16 +90,15 @@ h4{
 .Profile_effect{
     padding-top: 15%;
     position: absolute;
-    left: 84%;
-    top: 50%;
+    left: 81%;
+    top: 42%;
     height: 14vw;
     width: 13vw;
-    background: linear-gradient(180deg, #A8DADC 0%, #457B9D 100%);
-    border-radius: 0 1.2vw 1.2vw;
+    background: linear-gradient(180deg, var(--lightBlue) 0%, var(--blue) 100%);
+    border-radius: 0.2vw 1.2vw 1.2vw;
     z-index: 100;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
     align-items: center;
-    transition: width 0.4s ease;
 }

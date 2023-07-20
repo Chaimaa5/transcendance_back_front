@@ -4,7 +4,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    background-image: linear-gradient(to bottom right, #457B9D, #1D3557);
+    background-image: linear-gradient(to bottom right, var(--blue), #1D3557);
     box-shadow: 1vw 1.3vh 2vw  #0e1d32;
     width: 20vw;
     height: 25vw;
@@ -31,7 +31,7 @@
     align-self: center;
     justify-content: center;
     align-items: center;
-    color: #457B9D;
+    color: var(--blue);
 }
 
 h6{
@@ -41,7 +41,7 @@ h6{
 }
 
 .username_input::placeholder{
-    color: #457B9D;
+    color: var(--blue);
 }
 
 .upload-img{
@@ -68,12 +68,12 @@ h6{
 }
 .icon_{
     width: 1vw;
-    fill: #A8DADC;
+    fill: var(--lightBlue);
 }
 
 .username_input{
     .username_input::placeholder{
-        color: #457B9D;
+        color: var(--blue);
     }
     font-size: 0.8vw;
     font-family: Myfont_l;

@@ -13,24 +13,15 @@ import achievement from "../tools/arch.png"
 import Profile from "../profile/index";
 import Profile_effect from "../Profile_effect/index";
 import { Link, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Navbar = () => {
     const location = useLocation();  
     const [ishover_, sethover] = useState(false)
-    const [isIn, setIsIn] = useState (false);
-    const Color = () =>{
-        setIsIn(true);
-    }
-    const ishover = ()=>{
-        sethover(true);
-    }
-    const isleave = () => {
-        sethover(false);
-    }
     return(
         <div className="navbar_">
             <div className="level-bar ">
-                {location.pathname != "/Profile" &&
+                {location.pathname != "/profile" &&
                     <div className="container-lv bg-[#1D3557]">
                         <div className="info">
                             <h4>Lv</h4>
@@ -48,23 +39,24 @@ const Navbar = () => {
                 }
             </div>
             <div className="nav-bar" >
-                <Link to={"/Profile"}>
+                <Link to={"/profile"}>
                     <div className="profil_"
-                        onMouseEnter={ishover}
-                        onMouseLeave={isleave}
+                        onMouseEnter={() => { sethover(true)}}
+                        onMouseLeave={() => {sethover(false)}}
                         >
                         <Avatar src={avatar_img} wd_="4vw"/>
                         { ishover_ &&
-                            <div className="Profile_effect">
+                            <motion.div animate={{x: 15, y: 8}} className="Profile_effect"
+                            >
                                 <Profile_effect/>
-                            </div>
+                            </motion.div>
                         }
                     </div>
                 </Link>
-                <Link to={"/Home"}>
+                <Link to={"/home"}>
                     <ReactSVG  className="icon-svg" src={home_icon}/>
                 </Link>
-                <Link to={"/Leaderboord"}>
+                <Link to={"/leaderboord"}>
                     <ReactSVG className="icon-svg" src={leader_icon}/>
                 </Link>
                 <ReactSVG className="icon-svg" src={chat_icon}/>

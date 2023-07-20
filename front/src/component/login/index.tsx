@@ -1,11 +1,12 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import './index.scss'
 import { Application, SPEObject } from '@splinetool/runtime';
 // import anime from 'animejs';
 import { useRef } from "react";
 import bg from '../tools/sign/background.png'
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 const Spline = React.lazy(() => import('@splinetool/react-spline'));
 
@@ -28,9 +29,7 @@ const Signbottun = ({title}:btn_obj) => {
 
 
 function Login () {
-  const HandleLogin = () => {
-    window.location.href = 'http://localhost:3000/login';
-  };
+
   return (
     <div className="login">
         <img className="sign-bg" src={bg} />
@@ -42,10 +41,12 @@ function Login () {
           <h6 className="sb-title">Use Your Mouse to Experience the 3D Animation</h6>
           <h1 className="title_">Unlock The Game <br/>And Have Fun</h1>
           
-          <button className="btn-container" onClick={HandleLogin}>
-              <Signbottun title={"Log in With 42 Intra"}/>
+          <button onClick={() => {
+                window.location.href= "http://localhost:3000/login";
+            }}  className="btn-container" >
+                <Signbottun  title={"Log in With 42 Intra"}/>
           </button>
-          <button className="btn-container" >
+          <button className="btn-container">
               <Signbottun title={"Log in With Google Account"}/>
           </button>
         </div>

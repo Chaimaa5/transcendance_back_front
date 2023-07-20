@@ -7,7 +7,7 @@
     height: 2.5vw;
     padding: 0.2vw;
     border-radius: 5vw;
-    border: #457B9D solid 2px;
+    border: var(--blue) solid 2px;
     align-items: center;
 }
 .btn-body{
@@ -17,30 +17,30 @@
     justify-content: space-evenly;
     align-items: center;
     border-radius: 5vw;
-    background-color: #457B9D;
+    background-color: var(--blue);
 }
 
 .option{
     font-family: Myfont_l;
-    color: #F1FAEE;
+    color: var(--white);
 }
 
 .icon{
     align-items: center;
-    fill: #F1FAEE;
+    fill: var(--white);
     width: 1vw;
 }
 
 .btn-shape:hover{
-    border: #A8DADC solid 2px;
+    border: var(--lightBlue) solid 2px;
     .icon{
-        fill: #1D3557;
+        fill: var(--darkBlue);
     }
     .option{
-        color: #1D3557;
+        color: var(--darkBlue);
     }
     .btn-body{
-        background-color: #A8DADC;
+        background-color: var(--lightBlue);
     }
     padding: 0.1vw;
     transition: all 0.4s ease;

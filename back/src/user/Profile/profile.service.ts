@@ -25,6 +25,7 @@ export class ProfileService {
                 level: true,
                 XP: true,
                 rank: true,
+                avatar: true,
                 loss: true,
                 win: true
             }
@@ -66,6 +67,7 @@ export class ProfileService {
             'level':user?.level,
             'xp': user?.XP,
             'rank': user?.rank,
+            'avatar': user?.avatar,
             'friend':friends,
             'isOwner': isOwner,
             'isFriend': isFriend,
