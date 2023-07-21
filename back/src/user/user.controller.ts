@@ -25,8 +25,6 @@ export class UserController{
 
     @Get('players')
     async Players(){
-        console.log('here');
-        // const user : User = req.user as User;
         return  await this.userservice.Players();
     }
     //working
@@ -48,15 +46,15 @@ export class UserController{
     @UseInterceptors(FileInterceptor('avatar', Config)) 
     async UserSetup(@Req() req: Request, @UploadedFile() avatar: Express.Multer.File, @Body() data: UpdateUserDTO){
         const user : User = req.user as User;
-        console.log(avatar.filename);
         this.userservice.userSetup(user.id, avatar, data);
     }
 
     //Friendship Management
     //working
-    @Post('/add')
+    @Post('/add/:id')
     async addFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
+        console.log('id', id)
          this.userservice.addFriend(user.id, id);
          return {message: 'friend added'};
     }
@@ -114,11 +112,7 @@ export class UserController{
     //     for(const userId of connectedUsers)
     //         await this.updateOnlineStatus(userId, false);
     // }
-    // @Post('/update/profile')
-    // firstUpdate(@Req() req: Request ,@Body() data: Body)
-    // {
-    //     return this.userservice.UpdateUser(id, UserData);
-    // }
+
 }
 
 

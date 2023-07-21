@@ -44,6 +44,12 @@ export class ProfileController {
         return this.profile.Friends(username, user.id);
     }
 
+    @Get('/user/:username')
+    async User(@Param('username') username: string, @Req() req: Request){
+        const user : User = req.user as User;
+        return this.profile.User(user.id, username);
+    }
+
 }
 
 

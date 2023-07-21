@@ -37,9 +37,12 @@ export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisco
             let user = await this.userService.GetById(server.data.payload.id)
             if (user)
             {
-                this.clients.set( server.data.payload.id , server);
+                this.clients.set(server.data.payload.id , server);
                 await this.userService.updateOnlineStatus(user.id, true)
+                // const notifications = await this.userService.GetNotifications(user.id)
+                // server.emit('notifications', notifications);
                 server.emit('connectionSuccess', { message: 'Connected successfully!' });
+
             }
     }
 

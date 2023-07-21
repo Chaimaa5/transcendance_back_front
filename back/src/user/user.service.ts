@@ -1,17 +1,27 @@
-import { Injectable, Res } from '@nestjs/common';
+import { Injectable, Res, UnauthorizedException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { UpdateUserDTO } from './dto/updatedto.dto'
 import { Response } from 'express';
 
 @Injectable()
 export class UserService {
-
- 
-
+    
+    
+    
     
     prisma = new PrismaClient();
     constructor(){}
-    
+    // async UpdateUser(id: string, data: UpdateUserDTO) {
+    //     await this.prisma.user.update({
+    //                 where: {id: id},
+    //                 data: {data}
+    //             })
+    // }
+     // async UpdateUser(id: string, data: UpdateUserDTO) {
+    //    
+    // GetById(socket: any) {
+    //    this
+    // }
     async GetById(id: string){
         return await this.prisma.user.findUnique({where : {id:id}})
     }
@@ -62,6 +72,7 @@ export class UserService {
         }
         return false;
     }
+
     async FindUser(user: any) {
         const Exists = await this.prisma.user.findUnique({
             where:{id: user.id},
@@ -86,19 +97,15 @@ export class UserService {
         }
     }
 
-    // async UpdateUser(id: string, data: UpdateUserDTO) {
-    //     await this.prisma.user.update({
-    //         where: {id: id},
-    //         data: data
-    //     })
-    // }
-    // GetById(socket: any) {
-    //    this
-    // }
+   
     
     async userSetup(id: string, avatar: Express.Multer.File, data: UpdateUserDTO) {
-        const filename ="/upload/"+ avatar.filename;
+        const filename = "/upload/" + avatar.filename;
+        const username = data.username as string
         await this.prisma.user.update({where: {id: id}, data: {avatar: filename}});
+        if (username){
+            await this.prisma.user.update({where: {id: id}, data: {username: username}});
+        }
     }
 
     async updateOnlineStatus(id: string, status: boolean) {
@@ -156,15 +163,8 @@ export class UserService {
        })
     }
     async FindbyID(id: string) {
-        const user = await this.prisma.user.findUnique({where:  {id: id},
-            // select: {
-            //     id: true,
-            //     username: true,
-            //     avatar: true,
-            //     XP: true,
-            //     level: true,
-            //     topaz: true,
-            // }
+        const user = await this.prisma.user.findUnique({
+            where:  {id: id},
         }).then((user)=>{
             if (user){
                 if (user.avatar)
@@ -185,60 +185,82 @@ export class UserService {
 
               
     async addFriend(id : string, Id: string){
-        await this.prisma.friendship.create({
-            data: {
-                sender: {connect: {id: id}},
-                receiver: {connect: {id: Id}},
-                status: 'pending',
-                blockerId: '',
-            },
-        });
-
-        this.addNotifications(id, Id as string, 'friendship', 'sent you an invite')
+        console.log(Id)
+        const exist = await this.FindbyID(Id)
+        if (exist){
+            console.log('here')
+            await this.prisma.friendship.create({
+                data: {
+                    sender: {connect: {id: id}},
+                    receiver: {connect: {id: Id}},
+                    status: 'pending',
+                    blockerId: '',
+                },
+            });
+    
+            this.addNotifications(id, Id as string, 'friendship', 'sent you an invite')
+        }
+        else
+            throw new UnauthorizedException('User Does Not Exist')
      
     }
 
     async removeFriend(id : string, Id: string){
-        await this.prisma.friendship.deleteMany({
-            where: {
-                OR: [
-                    {senderId: id, receiverId: Id},
-                    {senderId: Id, receiverId: id},
-                ],
-            },
-        });
+        const exist = await this.FindbyID(Id)
+        if (exist){
+            await this.prisma.friendship.deleteMany({
+                where: {
+                    OR: [
+                        {senderId: id, receiverId: Id},
+                        {senderId: Id, receiverId: id},
+                    ],
+                },
+            });
+        }
+        else
+            throw new UnauthorizedException('User Does Not Exist')
 
     }
 
     async acceptFriend(id : string, Id: string){
-        await this.prisma.friendship.updateMany({
-            where: {
-                OR: [
-                    {senderId: id, receiverId: Id},
-                    {senderId: Id, receiverId: id},
-                ],
-            },
-            data: {
-                status: 'accepted',
-            },
-        });
-        this.addNotifications(id, Id as string, 'friendship', 'accepted your invite')
+        const exist = await this.FindbyID(Id)
+        if (exist){
+            await this.prisma.friendship.updateMany({
+                where: {
+                    OR: [
+                        {senderId: id, receiverId: Id},
+                        {senderId: Id, receiverId: id},
+                    ],
+                },
+                data: {
+                    status: 'accepted',
+                },
+            });
+            this.addNotifications(id, Id as string, 'friendship', 'accepted your invite')
+        }
+        else
+            throw new UnauthorizedException('User Does Not Exist')
     }
 
     async blockFriend(id : string, Id: string){
-        await this.prisma.friendship.updateMany({
-            where: {
-                OR: [
-                    {senderId: id, receiverId: Id},
-                    {senderId: Id, receiverId: id},
-                ],
+        const exist = await this.FindbyID(Id)
+        if (exist){
+            await this.prisma.friendship.updateMany({
+                where: {
+                    OR: [
+                        {senderId: id, receiverId: Id},
+                        {senderId: Id, receiverId: id},
+                    ],
 
-            },
-            data: {
-                status: 'blocked',
-                blockerId: id,
-            },
-        });
+                },
+                data: {
+                    status: 'blocked',
+                    blockerId: id,
+                },
+            });
+        }
+        else
+            throw new UnauthorizedException('User Does Not Exist')
 
     }
 

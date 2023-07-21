@@ -45,7 +45,6 @@ const TopPlayers = ()=> {
     useEffect(() => {
       HandleLogin();
     },[]);
-    console.log()
     const plyrs = [1,2,3,4,5]
     return(
         <motion.div animate={{x: "-43%", y: "-50%"}} className="players pos">
@@ -61,11 +60,8 @@ const TopPlayers = ()=> {
                 <div className="player-bar">
                     <div className="bar_cantainer">
                        <h3 className="inf">{data.rank}</h3>
-                       <Link to="/profile">
-                            <div onClick={() => {
-                                const tst:cntx = {username: data.username, avatar: ""};
-                                setData(tst);
-                             }} className="player-pc">
+                       <Link to={"/profile/" + data.username}>
+                            <div className="player-pc">
                                 <Avatar src={data.avatar} wd_="3vw"/>
                             </div>
                         </Link>

@@ -25,7 +25,7 @@ function Container(){
             Instanse.get("http://localhost:3000/user", {withCredentials: true})
             .then((res) => setData(res.data))
         }
-    ,[])
+    )
     return(
         <CrContext.Provider value={data}>
             <div className="background">
@@ -39,7 +39,7 @@ function Container(){
                     </div>
                     <div className="page">
                         {location.pathname == "/home" && <Home/>}
-                        {location.pathname == "/profile" && <Profile/>}
+                        {location.pathname.startsWith("/profile/") && <Profile/>}
                         {location.pathname == "/leaderboord" && <Leaderboord/>}
                     </div>
                     <div className="status">

@@ -14,10 +14,12 @@ import Profile from "../profile/index";
 import Profile_effect from "../Profile_effect/index";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import CrContext from "../context/context";
+import { useContext } from "react";
 const Navbar = () => {
     const location = useLocation();  
     const [ishover_, sethover] = useState(false)
+    const data = useContext(CrContext);
     return(
         <div className="navbar_">
             <div className="level-bar ">
@@ -39,7 +41,7 @@ const Navbar = () => {
                 }
             </div>
             <div className="nav-bar" >
-                <Link to={"/profile"}>
+                <Link to={"/profile/" + data.username}>
                     <div className="profil_"
                         onMouseEnter={() => { sethover(true)}}
                         onMouseLeave={() => {sethover(false)}}

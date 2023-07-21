@@ -1,8 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger"
 
-export class UpdateUserDTO{
-  @ApiProperty()
-  id?        :number    
+export class UpdateUserDTO{ 
   @ApiProperty()             
   username?  :String
   @ApiProperty()

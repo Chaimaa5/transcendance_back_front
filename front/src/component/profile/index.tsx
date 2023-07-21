@@ -21,6 +21,7 @@ import axios from "axios";
 import UserBtns from "./userBtns";
 import Instanse from "../api/api";
 import CrContext from "../context/context"
+import { useParams } from "react-router-dom";
 
 type achiev_ = {
     img: string,
@@ -75,16 +76,13 @@ type cntx = {
 const Profile = () => {
     const [response, setResponse] = useState<profile_>();
     const data = useContext<cntx>(CrContext)
-    const HandleLogin = () => {
-      return Instanse
-            .get<profile_>('http://localhost:3000/profile/' + data.username, {withCredentials: true})
-            .then((res) => {
-                setResponse(res.data)
-            });
-    };
+    const username = useParams().username
     useEffect(() => {
-      HandleLogin();
-    },[]);
+        Instanse.get<profile_>('profile/' + username)
+        .then((res) => {
+            setResponse(res.data)
+        });
+    },[response]);
 
     return(
         <div className="Profile">
@@ -106,7 +104,7 @@ const Profile = () => {
                         </div>
                     </div>
                     <div className="w-[100%] h-[50%] user-btns">
-                        {!response?.isOwner && <UserBtns/>}
+                        {!response?.isOwner && <UserBtns username={response?.username}/>}
                     </div>
                 </div>
                 <div className="lv-profile">

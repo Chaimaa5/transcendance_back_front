@@ -79,6 +79,68 @@ export class ProfileService {
     }
 
 
+    async User(id: string, username: string) {
+      let isOwner = true;
+        let isFriend = false;
+        let isSender = false;
+        let isReceiver = false;
+        let isBlocked = false;
+        const owner = await this.prisma.user.findUnique({where:{id : id}})
+        const friends = await this.CountFriends(username);
+        const user = await this.prisma.user.findUnique({where:{username : username},
+            select: {
+                id: true,
+                username: true,
+                level: true,
+                XP: true,
+                rank: true,
+                avatar: true,
+                loss: true,
+                win: true
+            }
+        });
+        if (user?.id != owner?.id)
+            isOwner = false;
+        if (!isOwner && user){
+            const ownerFriend =  await this.prisma.friendship.findFirst({
+                where:{
+                        OR: [
+                          { senderId: id, receiverId: user.id } ,
+                            { senderId: user.id, receiverId: id } 
+                        ]
+                },
+                select: {
+                    id: true,
+                    receiverId: true,
+                    senderId: true,
+                    status: true
+                }
+            });
+            console.log(ownerFriend)
+            if(ownerFriend?.status.includes('accepted'))
+                isFriend = true;
+            else if (ownerFriend?.status.includes('blocked'))
+                isBlocked = true;
+            else if (ownerFriend?.status.includes('pending'))
+            {
+                if (user?.id == ownerFriend.senderId)
+                    isSender = true;
+                else
+                    isReceiver = true;
+            }
+        }
+        return{
+            'id': user?.id,
+            'isOwner': isOwner,
+            'isFriend': isFriend,
+            'isSender': isSender,
+            'isReceiver': isReceiver,
+            'isBlocked': isBlocked
+
+        }
+    }
+
+
     async Badges(username: string) {
         return await this.prisma.user.findUnique({where:{username : username},
             select: {
