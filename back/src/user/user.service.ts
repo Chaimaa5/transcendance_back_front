@@ -1,17 +1,20 @@
 import { Injectable, Res } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { UpdateUserDTO } from './dto/updatedto.dto'
-import { CreateFriendshipDTO } from './dto/createFriendship.dto';
 import { Response } from 'express';
 
 @Injectable()
 export class UserService {
-  
+
  
 
     
     prisma = new PrismaClient();
     constructor(){}
+    
+    async GetById(id: string){
+        return await this.prisma.user.findUnique({where : {id:id}})
+    }
     async CreateUser(user: any)
     {
         const UserExists = await this.prisma.user.findUnique({
@@ -181,57 +184,53 @@ export class UserService {
     //Friendship
 
               
-    async addFriend(id : string, dto :CreateFriendshipDTO){
-        const {receiverId} = dto;
+    async addFriend(id : string, Id: string){
         await this.prisma.friendship.create({
             data: {
                 sender: {connect: {id: id}},
-                receiver: {connect: {id: receiverId}},
+                receiver: {connect: {id: Id}},
                 status: 'pending',
                 blockerId: '',
             },
         });
 
-        this.addNotifications(id, receiverId as string, 'friendship', 'sent you an invite')
+        this.addNotifications(id, Id as string, 'friendship', 'sent you an invite')
      
     }
 
-    async removeFriend(id : string, dto :CreateFriendshipDTO){
-        const {receiverId} = dto;
+    async removeFriend(id : string, Id: string){
         await this.prisma.friendship.deleteMany({
             where: {
                 OR: [
-                    {senderId: id, receiverId: receiverId},
-                    {senderId: receiverId, receiverId: id},
+                    {senderId: id, receiverId: Id},
+                    {senderId: Id, receiverId: id},
                 ],
             },
         });
 
     }
 
-    async acceptFriend(id : string, dto :CreateFriendshipDTO){
-        const {receiverId} = dto;
+    async acceptFriend(id : string, Id: string){
         await this.prisma.friendship.updateMany({
             where: {
                 OR: [
-                    {senderId: id, receiverId: receiverId},
-                    {senderId: receiverId, receiverId: id},
+                    {senderId: id, receiverId: Id},
+                    {senderId: Id, receiverId: id},
                 ],
             },
             data: {
                 status: 'accepted',
             },
         });
-        this.addNotifications(id, receiverId as string, 'friendship', 'accepted your invite')
+        this.addNotifications(id, Id as string, 'friendship', 'accepted your invite')
     }
 
-    async blockFriend(id : string, dto :CreateFriendshipDTO){
-        const {receiverId} = dto;
+    async blockFriend(id : string, Id: string){
         await this.prisma.friendship.updateMany({
             where: {
                 OR: [
-                    {senderId: id, receiverId: receiverId},
-                    {senderId: receiverId, receiverId: id},
+                    {senderId: id, receiverId: Id},
+                    {senderId: Id, receiverId: id},
                 ],
 
             },
@@ -259,13 +258,12 @@ export class UserService {
     }
 
     //should be updated
-    async getFriend(id : string, dto :CreateFriendshipDTO){
-        const {receiverId} = dto;
+    async getFriend(id : string, Id: string){
         const res = await this.prisma.friendship.findFirst({ where: {
             AND:[{
                 OR: [
-                    {senderId: id, receiverId: receiverId},
-                    {senderId: receiverId, receiverId: id},
+                    {senderId: id, receiverId: Id},
+                    {senderId: Id, receiverId: id},
                 ],
             },
             {status: 'accepted'},

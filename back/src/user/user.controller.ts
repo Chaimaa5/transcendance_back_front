@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, OnApplicationShutdown, Param, Patch, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDTO } from './dto/updatedto.dto'
-import { CreateFriendshipDTO } from './dto/createFriendship.dto';
 import { Request, Response} from 'express';
 // import { SocketGateway } from 'src/socket/socket.gateway';
 import { AuthGuard } from '@nestjs/passport';
@@ -56,33 +55,33 @@ export class UserController{
     //Friendship Management
     //working
     @Post('/add')
-    async addFriend(@Req() req: Request, @Body() dto: CreateFriendshipDTO){
+    async addFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
-         this.userservice.addFriend(user.id, dto);
+         this.userservice.addFriend(user.id, id);
          return {message: 'friend added'};
     }
-    @Post('/remove')
-    async removeFriend(@Req() req: Request, @Body() dto: CreateFriendshipDTO){
+    @Post('/remove/:id')
+    async removeFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
-        this.userservice.removeFriend(user.id, dto);
+        this.userservice.removeFriend(user.id, id);
         return {message: 'friend removed'};
     }
-    @Post('/accept')
-    async acceptFriend(@Req() req: Request, @Body() dto: CreateFriendshipDTO){
+    @Post('/accept/:id')
+    async acceptFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
-        this.userservice.acceptFriend(user.id, dto);
+        this.userservice.acceptFriend(user.id, id);
         return {message: 'friend accepted'};
     }
-    @Post('/block')
-    async blockFriend(@Req() req: Request, @Body() dto: CreateFriendshipDTO){
+    @Post('/block/:id')
+    async blockFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
-        this.userservice.blockFriend(user.id, dto);
+        this.userservice.blockFriend(user.id, id);
         return {message: 'friend blocked'};
     }
-    @Post('/unblock')
-    async unblockFriend(@Req() req: Request, @Body() dto: CreateFriendshipDTO){
+    @Post('/unblock/:id')
+    async unblockFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
-        this.userservice.removeFriend(user.id, dto);
+        this.userservice.removeFriend(user.id, id);
         return {message: 'friend unblocked'};
     }
     @Get('/friends')
@@ -90,10 +89,10 @@ export class UserController{
         const user : User = req.user as User;
         return this.userservice.getFriends(user.id);
     }
-    @Post('/friend')
-    async getFriend(@Req() req: Request,  @Body() dto: CreateFriendshipDTO){
+    @Post('/friend/:id')
+    async getFriend(@Req() req: Request,  @Param('id') id: string){
         const user : User = req.user as User;
-        return this.userservice.getFriend(user.id, dto);
+        return this.userservice.getFriend(user.id, id);
     }
     @Get('/pending')
     async getPendings(@Req() req: Request){

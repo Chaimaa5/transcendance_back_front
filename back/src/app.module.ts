@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 // import { SocketGateway } from './socket/socket.gateway';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { NotificationsGateway } from './socket/notifications.gateway';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { join } from 'path';
     })
   ],
   controllers: [],
-  providers: [],
+  providers: [NotificationsGateway],
 })
 export class AppModule {}

@@ -1,29 +1,46 @@
-// import { SubscribeMessage, WebSocketGateway, OnGatewayDisconnect, OnGatewayConnection} from '@nestjs/websockets';
-// import { JwtPayload } from 'jsonwebtoken';
-// import { Socket } from 'socket.io';
-// import { AuthService } from 'src/auth/auth.service';
-// import { UserService } from 'src/user/user.service';
+import { SubscribeMessage, WebSocketGateway, OnGatewayDisconnect, OnGatewayConnection, WebSocketServer} from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { SocketStrategy } from 'src/auth/jwt/websocket.strategy';
+import { UserService } from 'src/user/user.service';
+@WebSocketGateway()
+export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisconnect{
 
-// @WebSocketGateway()
-// export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisconnect{
-//   payload: JwtPayload
-//   connectedUsers: Set<string> = new Set()
-//   authService = new AuthService;
-//   userService = new UserService;
+    @WebSocketServer()
+    server: Server;
 
-//   afterInit(client: WebSocket) {
+  
+    clients: Map<string, Socket> = new Map<string, Socket>()
+    userService = new UserService;
+    socketStrategy = new SocketStrategy;
 
-//     // const id  = this.webSocket.validate(client);
-//   }
-//   handleDisconnect(client: Socket){
-//     const id = client.handshake.query.userId;
-//     // this.userService.updateOnlineStatus(id, 0)
-//     this.connectedUsers.delete(id as string);
-//   }
 
-//   handleConnection(client: Socket) {
 
+    async afterInit(server: Socket) {
+        console.log('WebSocket gateway initialized!');
+    }
     
-//     // this.userService.updateOnlineStatus(id, 1)
-//   }
-// }
+    async handleDisconnect(client: Socket){
+        
+        this.clients.forEach((socket, key) =>{
+            if(socket === socket){
+                this.clients.delete(key);
+            }
+        });
+        await this.userService.updateOnlineStatus(client.data.payload.id, false)
+        console.log('WebSocket gateway desconnected!');
+    }
+    
+    async handleConnection(server: Socket) {
+        let token : any =  server.handshake.headers['authorization'];
+        token = token.split(' ')[1]
+         server.data.payload = await this.socketStrategy.validate(token);
+            let user = await this.userService.GetById(server.data.payload.id)
+            if (user)
+            {
+                this.clients.set( server.data.payload.id , server);
+                await this.userService.updateOnlineStatus(user.id, true)
+                server.emit('connectionSuccess', { message: 'Connected successfully!' });
+            }
+    }
+
+}
