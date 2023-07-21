@@ -96,7 +96,6 @@ export class AuthService {
  
     async RefreshTokens(req: Request, res: Response) {
 
-        console.log(req);
         const users: any = req.user;
         const user = await this.userService.GetUser(users);
         if (!user)
@@ -115,7 +114,6 @@ export class AuthService {
 
             const encryptedToken = this.encryptToken(Refresh_Token);
             this.userService.UpdateRefreshToken(user.id , encryptedToken)
-            console.log('finiished');
         }
         else{
             throw new ForbiddenException('Access Denied');

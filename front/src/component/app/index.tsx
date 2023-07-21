@@ -11,6 +11,7 @@ import axios from "axios";
 import Leaderboord from "../leaderboord";
 import Instanse from "../api/api";
 import CrContext from "../context/context";
+import Setting from "../setting";
 
 
 type cntx = {
@@ -41,6 +42,7 @@ function Container(){
                         {location.pathname == "/home" && <Home/>}
                         {location.pathname.startsWith("/profile/") && <Profile/>}
                         {location.pathname == "/leaderboord" && <Leaderboord/>}
+                        {location.pathname == "/setting" && <Setting/>}
                     </div>
                     <div className="status">
                         <Status/>

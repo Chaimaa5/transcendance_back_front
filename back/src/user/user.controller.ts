@@ -51,32 +51,31 @@ export class UserController{
 
     //Friendship Management
     //working
-    @Post('/add/:id')
+    @Get('/add/:id')
     async addFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
-        console.log('id', id)
          this.userservice.addFriend(user.id, id);
          return {message: 'friend added'};
     }
-    @Post('/remove/:id')
+    @Get('/remove/:id')
     async removeFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
         this.userservice.removeFriend(user.id, id);
         return {message: 'friend removed'};
     }
-    @Post('/accept/:id')
+    @Get('/accept/:id')
     async acceptFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
         this.userservice.acceptFriend(user.id, id);
         return {message: 'friend accepted'};
     }
-    @Post('/block/:id')
+    @Get('/block/:id')
     async blockFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
         this.userservice.blockFriend(user.id, id);
         return {message: 'friend blocked'};
     }
-    @Post('/unblock/:id')
+    @Get('/unblock/:id')
     async unblockFriend(@Req() req: Request, @Param('id') id: string){
         const user : User = req.user as User;
         this.userservice.removeFriend(user.id, id);
@@ -87,7 +86,7 @@ export class UserController{
         const user : User = req.user as User;
         return this.userservice.getFriends(user.id);
     }
-    @Post('/friend/:id')
+    @Get('/friend/:id')
     async getFriend(@Req() req: Request,  @Param('id') id: string){
         const user : User = req.user as User;
         return this.userservice.getFriend(user.id, id);

@@ -34,7 +34,7 @@ export class HomeController {
     @Post('/search')
     async Search(@Req() req: Request, @Body() input: SerachpDTO) {
         const user : User = req.user as User;
-        return this.home.Search(input.input);
+        return this.home.Search(input.Value);
     }
 }
 

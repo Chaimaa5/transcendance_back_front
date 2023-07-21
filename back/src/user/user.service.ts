@@ -185,10 +185,8 @@ export class UserService {
 
               
     async addFriend(id : string, Id: string){
-        console.log(Id)
         const exist = await this.FindbyID(Id)
         if (exist){
-            console.log('here')
             await this.prisma.friendship.create({
                 data: {
                     sender: {connect: {id: id}},

@@ -20,7 +20,8 @@ function App() {
           <Route path={"/home"}  element={<Container />} />
           <Route path="/setup" element={<Setup />} />
           <Route path="/profile/:username" element={<Container />} />
-          <Route path="leaderboord" element={<Container />} />
+          <Route path="/leaderboord" element={<Container />} />
+          <Route path="/setting" element={<Container />} />
         </Routes>
     </Router>
     </div>

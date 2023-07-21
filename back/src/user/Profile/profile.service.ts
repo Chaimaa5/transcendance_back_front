@@ -47,7 +47,6 @@ export class ProfileService {
                     status: true
                 }
             });
-            console.log(ownerFriend)
             if(ownerFriend?.status.includes('accepted'))
                 isFriend = true;
             else if (ownerFriend?.status.includes('blocked'))
@@ -116,7 +115,6 @@ export class ProfileService {
                     status: true
                 }
             });
-            console.log(ownerFriend)
             if(ownerFriend?.status.includes('accepted'))
                 isFriend = true;
             else if (ownerFriend?.status.includes('blocked'))
@@ -226,6 +224,7 @@ export class ProfileService {
             }
         });
 
+ 
 
         const sentPromise = await this.prisma.user.findUnique({
              where: { id: id },
@@ -269,14 +268,14 @@ export class ProfileService {
                status: 'accepted',
                AND: [
                 {
-                  receiver: {
+                  sender: {
                     id: {
                       notIn: userBlocked.map(friendship => friendship.receiverId)
                     }
                   }
                 },
                 {
-                  receiver: {
+                  sender: {
                     id: {
                       notIn: userBlockers.map(friendship => friendship.senderId)
                     }
@@ -297,7 +296,8 @@ export class ProfileService {
              },
            });
 
-           
+           console.log('userBlocked: ', receivedPromise)
+           console.log('sentPromise: ', sentPromise)
            const senderData = receivedPromise ?  receivedPromise.map((friendship) => friendship.sender): [];
            const senderDataModified = senderData.map((sender) =>{
             if (sender){
