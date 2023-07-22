@@ -26,27 +26,6 @@ export class AuthService {
     prisma = new PrismaClient();
     secretKey = 'secret';
   
-
-    // async GetUserFromSocket(client: Socket) {
-    //     try{
-    //         let token  = client.handshake.headers.authorization
-    //         if(token)
-    //         {
-    //             const auth_token : string = token.split('')[1]
-    //             const payload  = jwt.verify(auth_token , process.env.JWT_REFRESH_SECRET as jwt.Secret)
-    //             const id = payload.id
-    //             // const user  = this.userService.FindbyID(id) as User
-    //             // if(!user)
-    //             //     throw new UnauthorizedException('User Does Not Exist');
-    //             // const id2 = user.id
-    //             // return {...user}
-    //         }
-    //     }catch(err){
-    //         if(err instanceof jwt.TokenExpiredError )
-    //             throw  new UnauthorizedException('Expired Token Exception');
-    //     }
-    // }
-
         
 
     async signIn(res: Response, req: Request) {
@@ -113,7 +92,7 @@ export class AuthService {
             res.cookie('refresh_token', Refresh_Token, {httpOnly: true, secure: true,});
 
             const encryptedToken = this.encryptToken(Refresh_Token);
-            this.userService.UpdateRefreshToken(user.id , encryptedToken)
+            await this.userService.UpdateRefreshToken(user.id , encryptedToken)
         }
         else{
             throw new ForbiddenException('Access Denied');

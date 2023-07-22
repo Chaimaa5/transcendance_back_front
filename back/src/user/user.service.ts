@@ -11,17 +11,7 @@ export class UserService {
     
     prisma = new PrismaClient();
     constructor(){}
-    // async UpdateUser(id: string, data: UpdateUserDTO) {
-    //     await this.prisma.user.update({
-    //                 where: {id: id},
-    //                 data: {data}
-    //             })
-    // }
-     // async UpdateUser(id: string, data: UpdateUserDTO) {
-    //    
-    // GetById(socket: any) {
-    //    this
-    // }
+
     async GetById(id: string){
         return await this.prisma.user.findUnique({where : {id:id}})
     }
@@ -196,7 +186,8 @@ export class UserService {
                 },
             });
     
-            this.addNotifications(id, Id as string, 'friendship', 'sent you an invite')
+            await this.addNotifications(id, Id as string, 'friendship', 'sent you an invite')
+            //emit notification
         }
         else
             throw new UnauthorizedException('User Does Not Exist')
@@ -234,7 +225,8 @@ export class UserService {
                     status: 'accepted',
                 },
             });
-            this.addNotifications(id, Id as string, 'friendship', 'accepted your invite')
+            await this.addNotifications(id, Id as string, 'friendship', 'accepted your invite')
+            //emit notification
         }
         else
             throw new UnauthorizedException('User Does Not Exist')
@@ -303,9 +295,9 @@ export class UserService {
             {status: 'pending'},
             ],
             
-        },
+            },
         
-    });
+        });
         return res;
     }
 

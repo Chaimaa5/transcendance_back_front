@@ -66,7 +66,7 @@ export class LeaderboardService {
             }
         });
 
-        res = this.userService.updateAvatar(res);
+        res = await this.userService.updateAvatar(res);
         return res;
     }
     async Palyers(ownerId: string) {
@@ -151,7 +151,7 @@ export class LeaderboardService {
             topaz: true,
           }
        });
-       players = this.userService.updateAvatar(players);
+       players = await this.userService.updateAvatar(players);
        return players;
     }
 }

@@ -15,26 +15,26 @@ export class HomeController {
     @Get('/bestRanked')
     async bestRanked(@Req() req: Request) {
         const user : User = req.user as User;
-        return this.home.bestRanked(user.id);
+        return await this.home.bestRanked(user.id);
     }
     
     @Get('/navbar/')
     async NavBar(@Req() req: Request) {
         const user : User = req.user as User;
-        return this.home.NavBar(user.id);
+        return await this.home.NavBar(user.id);
     }       
             
     @Get('/onlineFriends/')
     async OnlineFriends(@Req() req: Request) {
         const user : User = req.user as User;
-        return this.home.OnlineFriends(user.id);
+        return await this.home.OnlineFriends(user.id);
     }
    
 
     @Post('/search')
     async Search(@Req() req: Request, @Body() input: SerachpDTO) {
         const user : User = req.user as User;
-        return this.home.Search(input.Value);
+        return await this.home.Search(input.Value);
     }
 }
 

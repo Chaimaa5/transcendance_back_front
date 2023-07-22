@@ -13,13 +13,13 @@ export class LeaderboardController {
     @Get('')
     async Leaderboard( @Req() req: Request) {
         const user : User = req.user as User;
-        return this.profile.Leaderboard(user.id);
+        return await this.profile.Leaderboard(user.id);
     }
     
     @Get('players')
     async Palyers( @Req() req: Request) {
         const user : User = req.user as User;
-        return this.profile.Palyers(user.id);
+        return await this.profile.Palyers(user.id);
     }
 
 }

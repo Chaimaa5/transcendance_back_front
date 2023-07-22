@@ -32,7 +32,15 @@ export class ProfileService {
         });
         if (user?.id != owner?.id)
             isOwner = false;
-        if (!isOwner && user){
+            if (user){
+
+                if (user.avatar)
+                {
+                    if (!user.avatar.includes('cdn.intra')){
+                        user.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + user.avatar
+                    }
+                }        
+                if (!isOwner){
             const ownerFriend =  await this.prisma.friendship.findFirst({
                 where:{
                         OR: [
@@ -59,6 +67,7 @@ export class ProfileService {
                     isReceiver = true;
             }
         }
+    }
         return{
             'username': user?.username,
             'losses': user?.loss,

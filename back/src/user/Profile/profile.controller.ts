@@ -16,38 +16,38 @@ export class ProfileController {
     @Get(':username')
     async Profile(@Param('username') username: string, @Req() req: Request){
         const user : User = req.user as User;
-        return this.profile.Profile(user.id, username);
+        return await this.profile.Profile(user.id, username);
     }
 
     //Acheivments
     @Get('/acheivments/:username')
     async GetAcheivments(@Param('username') username: string, @Req() req: Request){
-        return this.profile.Badges(username);
+        return await this.profile.Badges(username);
     }
 
     //MatchHistory --- Not Complete
     @Get('/history/:username')
     async MatchHistory(@Param('username') username: string,@Req() req: Request){
-        return this.profile.MatchHistory(username);
+        return await this.profile.MatchHistory(username);
     }
 
     //Percentage in profile
     @Get('/statistics/:username')
     async UserStatistics(@Param('username') username: string, @Req() req: Request){
-        return this.profile.CalculatePercentage(username);
+        return await this.profile.CalculatePercentage(username);
     }
 
     //List of friends in profile
     @Get('/friends/:username')
     async Friends(@Param('username') username: string, @Req() req: Request){
         const user : User = req.user as User;
-        return this.profile.Friends(username, user.id);
+        return await this.profile.Friends(username, user.id);
     }
 
     @Get('/user/:username')
     async User(@Param('username') username: string, @Req() req: Request){
         const user : User = req.user as User;
-        return this.profile.User(user.id, username);
+        return await this.profile.User(user.id, username);
     }
 
 }

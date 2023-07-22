@@ -64,7 +64,7 @@ export class HomeService {
          }
         });
 
-        const ModifiedObject = this.userService.updateAvatar(bestRanked)
+        const ModifiedObject = await this.userService.updateAvatar(bestRanked)
         return ModifiedObject;
 
      }
@@ -87,7 +87,6 @@ export class HomeService {
            if (!nav.avatar.includes('cdn.intra')){
             nav.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + nav.avatar
         }
-
          return nav;
     }
 
@@ -104,9 +103,11 @@ export class HomeService {
            });
 
            if (user)
-           if (!user.avatar.includes('cdn.intra')){
-            user.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + user.avatar
-        }
+           {
+              if (!user.avatar.includes('cdn.intra')){
+                user.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + user.avatar
+              }
+           }
         return user
     }
     
@@ -187,7 +188,7 @@ export class HomeService {
         }
         }) 
 
-        res = this.userService.updateAvatar(res);
+        res = await this.userService.updateAvatar(res);
         return res;
     }
 }

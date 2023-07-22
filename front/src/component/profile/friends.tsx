@@ -21,7 +21,6 @@ type friends_ = {
 const Friends = () => {
     const routProp = useParams()
     const [response, setResponse] = useState<friends_[]>([]);
-    console.log(routProp)
     const Fetch = async () => {
         await Instanse.get<friends_[]>('http://localhost:3000/profile/friends/' + routProp.username, {withCredentials: true})
         .then((res) => {

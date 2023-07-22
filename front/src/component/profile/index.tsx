@@ -80,6 +80,7 @@ const Profile = () => {
     useEffect(() => {
         Instanse.get<profile_>('profile/' + username)
         .then((res) => {
+            console.log(res.data)
             setResponse(res.data)
         });
     },[response]);
