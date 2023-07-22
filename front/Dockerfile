@@ -3,9 +3,13 @@ FROM node:20
 
 COPY package*.json ./
 
+
+RUN npm install 
+
 COPY vite.config.js ./
 
-RUN npm install -g 
+COPY ./src ./src
+# RUN npm install vite -- save-dev
+# RUN npm install vite@latest
 
-RUN npm install vite --save-dev
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "dev"]
