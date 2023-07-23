@@ -18,6 +18,6 @@ async function bootstrap() {
   app.useWebSocketAdapter(new IoAdapter(app));
   app.use(cors(corsOptions));
   app.use(cookieParser());
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 }
 bootstrap();
