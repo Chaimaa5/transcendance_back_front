@@ -352,7 +352,8 @@ export class ProfileService {
               { playerId2: id }
             ],
         },
-        include: {
+        select: {
+            winner: true,
             player1: {
                 select: {
                     username: true,
@@ -362,8 +363,9 @@ export class ProfileService {
                 select: {
                     username: true,
                 }
-            }
+            },
         },
+        
 
        });
     }

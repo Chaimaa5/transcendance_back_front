@@ -103,6 +103,7 @@ model  Game {
   playerXp2  Int
   mode       String
   rounds     Int
+  winner      String
 }
 
 model Notification {
