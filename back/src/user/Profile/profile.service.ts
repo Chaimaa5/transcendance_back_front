@@ -37,7 +37,7 @@ export class ProfileService {
                 if (user.avatar)
                 {
                     if (!user.avatar.includes('cdn.intra')){
-                        user.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + user.avatar
+                        user.avatar = 'http://' + process.env.HOST + ':'+ process.env.BPORT + user.avatar
                     }
                 }        
                 if (!isOwner){
@@ -313,7 +313,7 @@ export class ProfileService {
                 if (sender.avatar)
                 {
                     if (!sender.avatar.includes('cdn.intra')){
-                        sender.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + sender.avatar
+                        sender.avatar = 'http://' + process.env.HOST + ':'+ process.env.BPORT + sender.avatar
                     }
                 }
             }
@@ -326,7 +326,7 @@ export class ProfileService {
                 if (receiver.avatar)
                 {
                     if (!receiver.avatar.includes('cdn.intra')){
-                        receiver.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + receiver.avatar
+                        receiver.avatar = 'http://' + process.env.HOST + ':'+ process.env.BPORT + receiver.avatar
                     }
                 }
             }

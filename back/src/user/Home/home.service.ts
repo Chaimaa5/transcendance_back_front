@@ -85,7 +85,7 @@ export class HomeService {
            });
            if (nav)
            if (!nav.avatar.includes('cdn.intra')){
-            nav.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + nav.avatar
+            nav.avatar = 'http://' + process.env.HOST + ':'+ process.env.BPORT + nav.avatar
         }
          return nav;
     }
@@ -105,7 +105,7 @@ export class HomeService {
            if (user)
            {
               if (!user.avatar.includes('cdn.intra')){
-                user.avatar = 'http://' + process.env.HOST + ':'+ process.env.PORT + user.avatar
+                user.avatar = 'http://' + process.env.HOST + ':'+ process.env.BPORT + user.avatar
               }
            }
         return user
